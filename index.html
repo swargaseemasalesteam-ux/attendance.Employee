@@ -19,13 +19,14 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* ── LOGIN ── */
+/* LOGIN */
 #loginScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:100;padding:24px;}
 .login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:420px;box-shadow:var(--shadow-md);overflow:hidden;}
 .login-header{background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));padding:30px 36px 26px;text-align:center;}
 .login-header h1{font-family:'Lora',serif;font-size:1.9rem;color:#fff;}
 .login-header p{color:rgba(255,255,255,0.72);font-size:0.83rem;margin-top:4px;}
 .login-body{padding:30px 36px;}
+.first-login-note{background:rgba(26,43,92,0.07);border:1px solid rgba(26,43,92,0.2);border-radius:8px;padding:11px 14px;font-size:0.82rem;color:var(--navy);margin-bottom:16px;display:none;}
 .form-group{margin-bottom:15px;}
 .form-group label{display:block;font-size:0.73rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:7px;}
 .form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.92rem;transition:border-color 0.2s;}
@@ -35,9 +36,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-primary:hover{opacity:0.92;}
 .btn-primary:active{transform:scale(0.98);}
 .login-error{color:var(--danger);font-size:0.82rem;text-align:center;margin-top:10px;display:none;}
-.first-login-note{background:rgba(26,43,92,0.07);border:1px solid rgba(26,43,92,0.2);border-radius:8px;padding:11px 14px;font-size:0.82rem;color:var(--navy);margin-bottom:16px;display:none;}
 
-/* ── SHELL ── */
+/* TOPBAR */
 #app{display:none;min-height:100vh;}
 .topbar{position:fixed;top:0;left:0;right:0;height:56px;background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));display:flex;align-items:center;padding:0 20px;z-index:100;box-shadow:0 2px 12px rgba(90,15,18,0.3);}
 .topbar-logo h2{font-family:'Lora',serif;font-size:1.2rem;color:#fff;}
@@ -49,6 +49,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .topbar-logout{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:7px;padding:5px 12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:background 0.2s;}
 .topbar-logout:hover{background:rgba(255,255,255,0.25);}
 
+/* SIDEBAR */
 .sidebar{position:fixed;left:0;top:56px;bottom:0;width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 12px;z-index:50;transition:transform 0.3s;overflow-y:auto;}
 .sidebar-section{font-size:0.67rem;font-weight:700;color:var(--border2);text-transform:uppercase;letter-spacing:0.1em;padding:10px 13px 5px;}
 .nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:500;font-size:0.87rem;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;}
@@ -57,36 +58,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .nav-item svg{width:17px;height:17px;flex-shrink:0;}
 .nav-divider{height:1px;background:var(--border);margin:8px 4px;}
 
+/* MAIN */
 .main{margin-left:220px;padding-top:56px;min-height:100vh;}
 .main-inner{padding:26px 26px 32px;}
 .page{display:none;animation:fadeIn 0.25s ease;}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
-.page-title{font-family:'Lora',serif;font-size:1.6rem;color:var(--maroon-dark);margin-bottom:3px;}
+.page-title{font-family:'Lora',serif;font-size:1.6rem;color:var(--maroon-dark);margin-bottom:2px;}
 .page-sub{color:var(--muted);font-size:0.86rem;margin-bottom:20px;}
 
-/* ── STATS ── */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:20px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
-.stat-card.c-maroon{border-top:3px solid var(--maroon);}
-.stat-card.c-green{border-top:3px solid var(--success);}
-.stat-card.c-gold{border-top:3px solid var(--gold);}
-.stat-card.c-navy{border-top:3px solid var(--navy);}
-.stat-icon{font-size:1.25rem;margin-bottom:10px;}
-.stat-value{font-size:1.6rem;font-weight:700;color:var(--text);font-family:'Lora',serif;line-height:1;}
-.stat-label{font-size:0.74rem;color:var(--muted);margin-top:5px;}
-
-/* ── CLOCK CARD ── */
-.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:20px;}
+/* CLOCK CARD */
+.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:18px;}
 .clock-card-label{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;}
 .clock-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-.clock-left{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+.clock-left{display:flex;align-items:center;gap:28px;}
 .clock-block{text-align:center;}
 .clock-time-big{font-family:'Lora',serif;font-size:2.2rem;font-weight:700;color:var(--success);line-height:1;letter-spacing:-1px;}
-.clock-time-big.inactive{color:var(--border2);}
+.clock-time-big.inactive{color:#D5C9BC;}
 .clock-time-big.done{color:var(--maroon);}
 .clock-block-label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:5px;}
-.clock-arrow{font-size:1.4rem;color:var(--border2);margin:0 4px;}
+.clock-arrow{font-size:1.4rem;color:var(--border2);margin:0 4px;padding-bottom:16px;}
 .clock-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
 .clock-status-text{font-size:0.82rem;font-weight:600;color:var(--success);}
 .clock-status-text.inactive{color:var(--muted);font-weight:400;}
@@ -99,28 +90,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-sq{width:10px;height:10px;background:rgba(255,255,255,0.7);display:inline-block;border-radius:2px;}
 .btn-dot{width:10px;height:10px;background:rgba(255,255,255,0.7);display:inline-block;border-radius:50%;}
 
-/* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:0.74rem;font-weight:600;}
-.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.badge-in{background:var(--success-bg);color:var(--success);}
-.badge-complete{background:rgba(26,43,92,0.08);color:var(--navy);}
-.badge-pending{background:var(--warning-bg);color:var(--warning);}
-.badge-approved{background:var(--success-bg);color:var(--success);}
-.badge-rejected{background:var(--danger-bg);color:var(--danger);}
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+.stat-card.c-maroon{border-top:3px solid var(--maroon);}
+.stat-card.c-gold{border-top:3px solid var(--gold);}
+.stat-card.c-green{border-top:3px solid var(--success);}
+.stat-card.c-danger{border-top:3px solid var(--danger);}
+.stat-label-top{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.stat-value{font-family:'Lora',serif;font-size:2rem;font-weight:700;line-height:1;}
+.stat-value.maroon{color:var(--maroon);}
+.stat-value.gold{color:var(--gold);}
+.stat-value.green{color:var(--success);}
+.stat-value.red{color:var(--danger);}
+.stat-sub{font-size:0.75rem;color:var(--muted);margin-top:5px;}
 
-/* ── CARD & TABLE ── */
+/* POLICY BANNER */
+.policy-banner{background:#EAF4EC;border:1px solid #BFD9C3;border-radius:10px;padding:12px 18px;font-size:0.85rem;color:#2D5A35;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+
+/* CARD & TABLE */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px;}
 .card-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface2);}
 .card-header h3{font-size:0.9rem;font-weight:600;color:var(--text2);}
 .table-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
-th{padding:10px 14px;text-align:left;font-size:0.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;background:var(--surface2);border-bottom:1px solid var(--border);}
-td{padding:12px 14px;font-size:0.85rem;border-bottom:1px solid var(--border);color:var(--text2);}
+th{padding:10px 16px;text-align:left;font-size:0.7rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.06em;background:var(--maroon-dark);}
+td{padding:12px 16px;font-size:0.85rem;border-bottom:1px solid var(--border);color:var(--text2);}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(122,21,24,0.02);}
 .empty-state{text-align:center;padding:38px;color:var(--muted);font-size:0.86rem;}
 
-/* ── FORM CARD ── */
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:0.74rem;font-weight:600;}
+.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.badge-pending{background:var(--warning-bg);color:var(--warning);}
+.badge-approved{background:var(--success-bg);color:var(--success);}
+.badge-rejected{background:var(--danger-bg);color:var(--danger);}
+.badge-complete{background:rgba(26,43,92,0.08);color:var(--navy);}
+.badge-in{background:var(--success-bg);color:var(--success);}
+
+/* FORM CARD */
 .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:480px;box-shadow:var(--shadow);}
 .form-card h3{font-family:'Lora',serif;font-size:1.05rem;color:var(--maroon-dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .btn-submit{background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:11px 26px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
@@ -131,13 +140,35 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 .filter-input:focus{outline:none;border-color:var(--maroon);}
 .form-error{color:var(--danger);font-size:0.82rem;margin-top:10px;display:none;}
 
-/* ── TOAST ── */
+/* CALENDAR */
+.cal-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+.cal-toolbar h3{font-family:'Lora',serif;font-size:1.1rem;color:var(--maroon-dark);min-width:170px;text-align:center;}
+.cal-btn{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 14px;color:var(--text2);cursor:pointer;font-size:0.82rem;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.cal-btn:hover{border-color:var(--maroon);color:var(--maroon);}
+.cal-day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
+.cal-day-name{text-align:center;padding:8px 2px;font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.cal-cell-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px;}
+.cal-cell{min-height:64px;background:var(--surface2);border-radius:8px;padding:6px;border:1px solid var(--border);transition:border-color 0.15s;}
+.cal-cell.today{border-color:var(--maroon);background:rgba(122,21,24,0.04);}
+.cal-cell.today .cal-num{color:var(--maroon);font-weight:700;}
+.cal-cell.other-month .cal-num{color:var(--border);}
+.cal-cell.has-approved{background:var(--success-bg);border-color:#BFD9C3;}
+.cal-cell.has-pending{background:var(--warning-bg);border-color:#E8D5A3;}
+.cal-num{font-weight:600;font-size:0.79rem;margin-bottom:3px;color:var(--text2);}
+.cal-event{font-size:0.62rem;padding:2px 4px;border-radius:3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-event.approved{background:var(--success-bg);color:var(--success);}
+.cal-event.pending{background:var(--warning-bg);color:var(--warning);}
+.cal-event.rejected{background:var(--danger-bg);color:var(--danger);}
+.cal-legend{display:flex;gap:16px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border);}
+.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);}
+.cal-legend-dot{width:10px;height:10px;border-radius:3px;}
+
+/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 18px;font-size:0.85rem;box-shadow:var(--shadow-md);z-index:9999;display:flex;align-items:center;gap:9px;transform:translateY(80px);opacity:0;transition:all 0.3s;color:var(--text2);}
 .toast.show{transform:none;opacity:1;}
 .toast.success{border-left:3px solid var(--success);}
 .toast.error{border-left:3px solid var(--danger);}
 
-/* ── OVERLAY ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;display:none;}
 .overlay.show{display:block;}
 
@@ -149,6 +180,7 @@ tr:hover td{background:rgba(122,21,24,0.02);}
   .clock-inner{flex-direction:column;align-items:flex-start;}
   .clock-right{align-items:flex-start;}
   .topbar-team{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
@@ -163,8 +195,8 @@ tr:hover td{background:rgba(122,21,24,0.02);}
     </div>
     <div class="login-body">
       <div class="first-login-note" id="firstLoginNote">👋 Welcome! First login — please set your password below.</div>
-      <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter your username" autocomplete="username"/></div>
-      <div class="form-group" id="passwordGroup"><label id="passwordLabel">Password</label><input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')handleLogin()"/></div>
+      <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter your username"/></div>
+      <div class="form-group"><label id="passwordLabel">Password</label><input type="password" id="loginPassword" placeholder="Enter your password" onkeydown="if(event.key==='Enter')handleLogin()"/></div>
       <div class="form-group" id="confirmGroup" style="display:none;"><label>Confirm Password</label><input type="password" id="loginConfirm" placeholder="Re-enter your password"/></div>
       <button class="btn-primary" onclick="handleLogin()"><span id="loginBtnText">Sign In</span></button>
       <div class="login-error" id="loginError"></div>
@@ -176,7 +208,6 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 
 <!-- APP -->
 <div id="app">
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-logo"><h2>AttendFlow</h2><span>EMPLOYEE</span></div>
     <div class="topbar-right">
@@ -189,14 +220,13 @@ tr:hover td{background:rgba(122,21,24,0.02);}
     </div>
   </div>
 
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-section">My Portal</div>
     <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard
     </div>
     <div class="nav-item" id="nav-attendance" onclick="showPage('attendance',this)">
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>Attendance
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>Attendance Log
     </div>
     <div class="nav-divider"></div>
     <div class="sidebar-section">Leave</div>
@@ -206,6 +236,9 @@ tr:hover td{background:rgba(122,21,24,0.02);}
     <div class="nav-item" id="nav-myLeaves" onclick="showPage('myLeaves',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>My Leaves
     </div>
+    <div class="nav-item" id="nav-calendar" onclick="showPage('calendar',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>Calendar
+    </div>
     <div class="nav-divider"></div>
     <div class="sidebar-section">Account</div>
     <div class="nav-item" id="nav-changePassword" onclick="showPage('changePassword',this)">
@@ -213,20 +246,15 @@ tr:hover td{background:rgba(122,21,24,0.02);}
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="main-inner">
 
       <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
-        <div class="page-title">Good <span id="greeting">day</span>, <span id="greetName">—</span> 👋</div>
-        <div class="page-sub"><span id="liveDate">—</span> &nbsp;·&nbsp; <span id="liveClock" style="font-weight:600;color:var(--maroon);">00:00:00</span></div>
-        <div class="stats-grid">
-          <div class="stat-card c-maroon"><div class="stat-icon">⏱️</div><div class="stat-value" id="statToday">—</div><div class="stat-label">Today's Hours</div></div>
-          <div class="stat-card c-green"><div class="stat-icon">✅</div><div class="stat-value" id="statPresent">—</div><div class="stat-label">Present This Month</div></div>
-          <div class="stat-card c-gold"><div class="stat-icon">📅</div><div class="stat-value" id="statLeaves">—</div><div class="stat-label">Leaves This Month</div></div>
-          <div class="stat-card c-navy"><div class="stat-icon">⏳</div><div class="stat-value" id="statPending">—</div><div class="stat-label">Pending Requests</div></div>
-        </div>
+        <div class="page-title">Welcome, <span id="greetName">—</span> 👋</div>
+        <div class="page-sub">Your daily overview — <span id="liveDate">—</span> &nbsp;·&nbsp; <span id="liveClock" style="font-weight:600;color:var(--maroon);">00:00:00</span></div>
+
+        <!-- CLOCK CARD -->
         <div class="clock-card">
           <div class="clock-card-label">Today's Attendance</div>
           <div class="clock-inner">
@@ -250,16 +278,47 @@ tr:hover td{background:rgba(122,21,24,0.02);}
             </div>
           </div>
         </div>
+
+        <!-- STAT CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card c-maroon">
+            <div class="stat-label-top">Week-offs Left</div>
+            <div class="stat-value maroon" id="statWeekOffsLeft">—</div>
+            <div class="stat-sub" id="statWeekOffSub">of — total</div>
+          </div>
+          <div class="stat-card c-gold">
+            <div class="stat-label-top">Pending</div>
+            <div class="stat-value gold" id="statPending">0</div>
+            <div class="stat-sub">awaiting approval</div>
+          </div>
+          <div class="stat-card c-green">
+            <div class="stat-label-top">Approved</div>
+            <div class="stat-value green" id="statApproved">0</div>
+            <div class="stat-sub">confirmed</div>
+          </div>
+          <div class="stat-card c-danger">
+            <div class="stat-label-top">Denied</div>
+            <div class="stat-value red" id="statDenied">0</div>
+            <div class="stat-sub">not approved</div>
+          </div>
+        </div>
+
+        <!-- POLICY BANNER -->
+        <div class="policy-banner">
+          📋 <strong>Policy:</strong> Week-off quota is set monthly by the admin. All leaves require approval.
+        </div>
+
+        <!-- RECENT REQUESTS -->
         <div class="card">
-          <div class="card-header"><h3>Recent Attendance</h3></div>
+          <div class="card-header"><h3>Recent Requests</h3><button class="btn-sm" onclick="loadDashboard()">↻ Refresh</button></div>
           <div class="table-wrap"><table>
-            <thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Duration</th></tr></thead>
-            <tbody id="recentAttBody"><tr><td colspan="4" class="empty-state">Loading...</td></tr></tbody>
+            <thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Applied On</th></tr></thead>
+            <tbody id="recentRequestsBody"><tr><td colspan="4" class="empty-state">Loading...</td></tr></tbody>
           </table></div>
         </div>
       </div>
 
-      <!-- ATTENDANCE -->
+      <!-- ATTENDANCE LOG -->
       <div class="page" id="page-attendance">
         <div class="page-title">Attendance Log</div>
         <div class="page-sub">Your complete daily attendance history.</div>
@@ -297,14 +356,34 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 
       <!-- MY LEAVES -->
       <div class="page" id="page-myLeaves">
-        <div class="page-title">My Leave Requests</div>
+        <div class="page-title">My Leaves</div>
         <div class="page-sub">Track the status of all your submitted requests.</div>
         <div class="card">
           <div class="card-header"><h3>All Requests</h3><button class="btn-sm" onclick="loadMyLeaves()">↻ Refresh</button></div>
           <div class="table-wrap"><table>
-            <thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Requested On</th><th>Status</th></tr></thead>
-            <tbody id="myLeavesBody"><tr><td colspan="5" class="empty-state">Loading...</td></tr></tbody>
+            <thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Applied On</th><th>Status</th></tr></thead>
+            <tbody id="myLeavesBody"><tr><td colspan="5" class="empty-state">No requests yet</td></tr></tbody>
           </table></div>
+        </div>
+      </div>
+
+      <!-- CALENDAR -->
+      <div class="page" id="page-calendar">
+        <div class="page-title">My Calendar</div>
+        <div class="page-sub">View your leave dates on a monthly calendar.</div>
+        <div class="card" style="padding:22px;">
+          <div class="cal-toolbar">
+            <button class="cal-btn" onclick="calPrev()">← Prev</button>
+            <h3 id="calTitle">—</h3>
+            <button class="cal-btn" onclick="calNext()">Next →</button>
+          </div>
+          <div class="cal-day-grid" id="calDayNames"></div>
+          <div class="cal-cell-grid" id="calGrid"></div>
+          <div class="cal-legend">
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--success-bg);border:1px solid #BFD9C3"></div>Approved</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--warning-bg);border:1px solid #E8D5A3"></div>Pending</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--danger-bg);border:1px solid #F5C6C0"></div>Rejected</div>
+          </div>
         </div>
       </div>
 
@@ -334,33 +413,27 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzFDjgpt5S-fruEBflRHzVl
 let user = null;
 let isFirstLogin = false;
 let allAttendance = [];
+let myLeaveRecords = [];
+let weekOffQuota = 4;
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
 
 // ── INIT ────────────────────────────────────────────────────
 window.addEventListener('load', function() {
-  var saved = localStorage.getItem('af_user');
-  if (saved) {
-    try { user = JSON.parse(saved); } catch(e) { user = null; }
-  }
-  if (user && user.employeeID) {
-    initApp();
-  } else {
-    document.getElementById('loginScreen').style.display = 'flex';
-  }
+  try { var s = localStorage.getItem('af_user'); if(s) user = JSON.parse(s); } catch(e){}
+  if (user && user.employeeID) { initApp(); }
+  else { document.getElementById('loginScreen').style.display = 'flex'; }
   startClock();
-  var h = new Date().getHours();
-  document.getElementById('greeting').textContent = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
 });
 
 function startClock() {
   function tick() {
     var n = new Date();
-    var el = document.getElementById('liveClock');
-    var dl = document.getElementById('liveDate');
-    if (el) el.textContent = n.toLocaleTimeString('en-IN', {hour12: false});
-    if (dl) dl.textContent = n.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    var el = document.getElementById('liveClock'), dl = document.getElementById('liveDate');
+    if(el) el.textContent = n.toLocaleTimeString('en-IN',{hour12:false});
+    if(dl) dl.textContent = n.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   }
-  tick();
-  setInterval(tick, 1000);
+  tick(); setInterval(tick, 1000);
 }
 
 // ── LOGIN ────────────────────────────────────────────────────
@@ -369,7 +442,6 @@ async function handleLogin() {
   var password = document.getElementById('loginPassword').value;
   var confirm  = document.getElementById('loginConfirm').value;
   document.getElementById('loginError').style.display = 'none';
-
   if (!username) { showLoginErr('Please enter your username.'); return; }
 
   if (isFirstLogin) {
@@ -381,14 +453,13 @@ async function handleLogin() {
       user = {employeeID:r.employeeID, name:r.name, team:r.team, role:r.role};
       localStorage.setItem('af_user', JSON.stringify(user));
       initApp();
-    } else { showLoginErr(r.message); }
+    } else showLoginErr(r.message);
     return;
   }
 
-  var res = await api({action:'login', username:username, password:password || '__check__'});
+  var res = await api({action:'login', username:username, password:password||'__check__'});
   if (res.success && res.firstLogin) {
-    isFirstLogin = true;
-    user = {employeeID: res.employeeID};
+    isFirstLogin = true; user = {employeeID:res.employeeID};
     document.getElementById('firstLoginNote').style.display = 'block';
     document.getElementById('passwordLabel').textContent = 'Set New Password';
     document.getElementById('confirmGroup').style.display = 'block';
@@ -398,15 +469,9 @@ async function handleLogin() {
     user = {employeeID:res.employeeID, name:res.name, team:res.team, role:res.role};
     localStorage.setItem('af_user', JSON.stringify(user));
     initApp();
-  } else {
-    showLoginErr(res.message || 'Login failed. Please check your credentials.');
-  }
+  } else showLoginErr(res.message || 'Login failed.');
 }
-
-function showLoginErr(m) {
-  var e = document.getElementById('loginError');
-  e.textContent = m; e.style.display = 'block';
-}
+function showLoginErr(m){ var e=document.getElementById('loginError'); e.textContent=m; e.style.display='block'; }
 
 // ── APP INIT ─────────────────────────────────────────────────
 async function initApp() {
@@ -414,9 +479,9 @@ async function initApp() {
   document.getElementById('app').style.display = 'block';
   document.getElementById('userName').textContent = user.name || '—';
   document.getElementById('userTeam').textContent = user.team || '—';
-  document.getElementById('userAvatar').textContent = (user.name || '?')[0].toUpperCase();
-  document.getElementById('greetName').textContent = (user.name || '').split(' ')[0] || '—';
-  var t = new Date(); t.setDate(t.getDate() + 1);
+  document.getElementById('userAvatar').textContent = (user.name||'?')[0].toUpperCase();
+  document.getElementById('greetName').textContent = (user.name||'').split(' ')[0] || '—';
+  var t = new Date(); t.setDate(t.getDate()+1);
   document.getElementById('leaveDate').value = t.toISOString().split('T')[0];
   await loadDashboard();
 }
@@ -426,202 +491,218 @@ async function loadDashboard() {
   var results = await Promise.all([
     api({action:'todayStatus', employeeID:user.employeeID}),
     api({action:'getAttendance', employeeID:user.employeeID}),
-    api({action:'getMyLeaves', employeeID:user.employeeID})
+    api({action:'getMyLeaves',   employeeID:user.employeeID}),
+    api({action:'getWeekOffQuota'})
   ]);
-  var sR = results[0], aR = results[1], lR = results[2];
+  var sR=results[0], aR=results[1], lR=results[2], qR=results[3];
 
-  allAttendance = (aR.success && aR.records) ? aR.records : [];
+  allAttendance   = (aR.success && aR.records)  ? aR.records  : [];
+  myLeaveRecords  = (lR.success && lR.records)  ? lR.records  : [];
+  weekOffQuota    = (qR.success && qR.quota)    ? qR.quota    : 4;
 
-  // Clock status
-  if (sR.success) {
-    var cIn = sR.clockedIn, cOut = sR.clockedOut;
-    var inDisp = document.getElementById('clockInDisplay');
-    var outDisp = document.getElementById('clockOutDisplay');
-    var statusTxt = document.getElementById('clockStatusText');
-    var btnIn = document.getElementById('btnClockIn');
-    var btnOut = document.getElementById('btnClockOut');
+  // Clock
+  updateClockUI(sR);
 
-    if (cIn && !cOut) {
-      inDisp.textContent = sR.loginTime ? sR.loginTime.substring(0,5) : '--:--';
-      inDisp.className = 'clock-time-big';
-      outDisp.textContent = '--:--';
-      outDisp.className = 'clock-time-big inactive';
-      statusTxt.textContent = 'Currently clocked in';
-      statusTxt.className = 'clock-status-text';
-      btnIn.disabled = true; btnOut.disabled = false;
-      document.getElementById('statToday').textContent = 'Active';
-    } else if (cIn && cOut) {
-      inDisp.textContent = sR.loginTime ? sR.loginTime.substring(0,5) : '--:--';
-      inDisp.className = 'clock-time-big';
-      outDisp.textContent = sR.logoutTime ? sR.logoutTime.substring(0,5) : '--:--';
-      outDisp.className = 'clock-time-big done';
-      statusTxt.textContent = 'Day complete · ' + (sR.duration || '');
-      statusTxt.className = 'clock-status-text';
-      btnIn.disabled = true; btnOut.disabled = true;
-      document.getElementById('statToday').textContent = sR.duration || '—';
-    } else {
-      inDisp.textContent = '--:--'; inDisp.className = 'clock-time-big inactive';
-      outDisp.textContent = '--:--'; outDisp.className = 'clock-time-big inactive';
-      statusTxt.textContent = 'Not clocked in'; statusTxt.className = 'clock-status-text inactive';
-      btnIn.disabled = false; btnOut.disabled = true;
-      document.getElementById('statToday').textContent = '—';
-    }
-  }
-
-  // Stats
+  // Stats — count this month's week-offs
   var now = new Date();
-  var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  document.getElementById('statPresent').textContent = allAttendance.filter(function(r){ return r.date && r.date.startsWith(ym); }).length;
-  var leaves = (lR.success && lR.records) ? lR.records : [];
-  document.getElementById('statLeaves').textContent = leaves.filter(function(l){ return l.date && l.date.startsWith(ym) && l.status==='Approved'; }).length;
-  document.getElementById('statPending').textContent = leaves.filter(function(l){ return l.status==='Pending'; }).length;
+  var ym  = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  var monthLeaves   = myLeaveRecords.filter(function(l){ return l.date && l.date.startsWith(ym); });
+  var weekOffsUsed  = monthLeaves.filter(function(l){ return l.type==='Weekly Off' && (l.status==='Approved'||l.status==='Pending'); }).length;
+  var weekOffsLeft  = Math.max(0, weekOffQuota - weekOffsUsed);
+  var pending       = myLeaveRecords.filter(function(l){ return l.status==='Pending'; }).length;
+  var approved      = myLeaveRecords.filter(function(l){ return l.status==='Approved'; }).length;
+  var denied        = myLeaveRecords.filter(function(l){ return l.status==='Rejected'; }).length;
 
-  // Recent table
-  renderRecentAtt(allAttendance.slice(0,7));
+  document.getElementById('statWeekOffsLeft').textContent = weekOffsLeft;
+  document.getElementById('statWeekOffSub').textContent   = 'of ' + weekOffQuota + ' total';
+  document.getElementById('statPending').textContent      = pending;
+  document.getElementById('statApproved').textContent     = approved;
+  document.getElementById('statDenied').textContent       = denied;
+
+  // Recent requests table
+  var tbody = document.getElementById('recentRequestsBody');
+  var recent = myLeaveRecords.slice(0, 8);
+  tbody.innerHTML = recent.length ? recent.map(function(r){
+    return '<tr><td>'+formatDate(r.date)+'</td><td>'+r.type+'</td>'
+      +'<td><span class="badge badge-'+r.status.toLowerCase()+'" style="font-size:0.72rem"><span class="dot"></span>'+r.status+'</span></td>'
+      +'<td>'+formatDate(r.requestedOn)+'</td></tr>';
+  }).join('') : '<tr><td colspan="4" class="empty-state">No requests yet</td></tr>';
+
+  // Attendance page
   renderAttTable(allAttendance);
 }
 
-function renderRecentAtt(records) {
-  var tbody = document.getElementById('recentAttBody');
-  if (!records.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No records yet</td></tr>'; return; }
-  tbody.innerHTML = records.map(function(r) {
-    return '<tr><td>'+formatDate(r.date)+'</td><td>'+(r.loginTime||'—')+'</td><td>'+(r.logoutTime||'—')+'</td><td>'+(r.duration||'—')+'</td></tr>';
-  }).join('');
+function updateClockUI(sR) {
+  var inDisp=document.getElementById('clockInDisplay'), outDisp=document.getElementById('clockOutDisplay');
+  var statusTxt=document.getElementById('clockStatusText');
+  var btnIn=document.getElementById('btnClockIn'), btnOut=document.getElementById('btnClockOut');
+  if (!sR.success) return;
+  if (sR.clockedIn && !sR.clockedOut) {
+    inDisp.textContent  = sR.loginTime  ? sR.loginTime.substring(0,5)  : '--:--'; inDisp.className  = 'clock-time-big';
+    outDisp.textContent = '--:--'; outDisp.className = 'clock-time-big inactive';
+    statusTxt.textContent = 'Currently clocked in'; statusTxt.className = 'clock-status-text';
+    btnIn.disabled=true; btnOut.disabled=false;
+  } else if (sR.clockedIn && sR.clockedOut) {
+    inDisp.textContent  = sR.loginTime  ? sR.loginTime.substring(0,5)  : '--:--'; inDisp.className  = 'clock-time-big';
+    outDisp.textContent = sR.logoutTime ? sR.logoutTime.substring(0,5) : '--:--'; outDisp.className = 'clock-time-big done';
+    statusTxt.textContent = 'Day complete · '+(sR.duration||''); statusTxt.className = 'clock-status-text';
+    btnIn.disabled=true; btnOut.disabled=true;
+  } else {
+    inDisp.textContent='--:--'; inDisp.className='clock-time-big inactive';
+    outDisp.textContent='--:--'; outDisp.className='clock-time-big inactive';
+    statusTxt.textContent='Not clocked in'; statusTxt.className='clock-status-text inactive';
+    btnIn.disabled=false; btnOut.disabled=true;
+  }
 }
 
-// ── CLOCK IN / OUT ───────────────────────────────────────────
+// ── CLOCK IN/OUT ─────────────────────────────────────────────
 async function clockIn() {
-  document.getElementById('btnClockIn').disabled = true;
+  document.getElementById('btnClockIn').disabled=true;
   var r = await api({action:'clockIn', employeeID:user.employeeID, name:user.name, team:user.team});
-  showToast(r.message, r.success ? 'success' : 'error');
-  if (r.success) { await loadDashboard(); }
-  else { document.getElementById('btnClockIn').disabled = false; }
+  showToast(r.message, r.success?'success':'error');
+  if(r.success){ var sR=await api({action:'todayStatus',employeeID:user.employeeID}); updateClockUI(sR); }
+  else document.getElementById('btnClockIn').disabled=false;
 }
-
 async function clockOut() {
-  document.getElementById('btnClockOut').disabled = true;
+  document.getElementById('btnClockOut').disabled=true;
   var r = await api({action:'clockOut', employeeID:user.employeeID});
-  showToast(r.message, r.success ? 'success' : 'error');
-  if (r.success) { await loadDashboard(); }
-  else { document.getElementById('btnClockOut').disabled = false; }
+  showToast(r.message, r.success?'success':'error');
+  if(r.success){ var sR=await api({action:'todayStatus',employeeID:user.employeeID}); updateClockUI(sR); renderAttTable(allAttendance); }
+  else document.getElementById('btnClockOut').disabled=false;
 }
 
-// ── ATTENDANCE PAGE ──────────────────────────────────────────
+// ── ATTENDANCE ───────────────────────────────────────────────
 function renderAttTable(records) {
-  var tbody = document.getElementById('attBody');
-  if (!records.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No records found</td></tr>'; return; }
-  tbody.innerHTML = records.map(function(r) {
-    var done = r.logoutTime && r.logoutTime !== '';
-    var badge = done
-      ? '<span class="badge badge-complete" style="font-size:0.72rem"><span class="dot"></span>Complete</span>'
-      : '<span class="badge badge-in" style="font-size:0.72rem"><span class="dot"></span>Active</span>';
-    return '<tr><td>'+formatDate(r.date)+'</td><td>'+(r.loginTime||'—')+'</td><td>'+(r.logoutTime||'—')+'</td><td>'+(r.duration||'—')+'</td><td>'+badge+'</td></tr>';
+  var tbody=document.getElementById('attBody');
+  if(!records.length){ tbody.innerHTML='<tr><td colspan="5" class="empty-state">No records found</td></tr>'; return; }
+  tbody.innerHTML=records.map(function(r){
+    var done=r.logoutTime&&r.logoutTime!=='';
+    return '<tr><td>'+formatDate(r.date)+'</td><td>'+(r.loginTime||'—')+'</td><td>'+(r.logoutTime||'—')+'</td><td>'+(r.duration||'—')+'</td>'
+      +'<td>'+(done?'<span class="badge badge-complete" style="font-size:0.72rem"><span class="dot"></span>Complete</span>':'<span class="badge badge-in" style="font-size:0.72rem"><span class="dot"></span>Active</span>')+'</td></tr>';
   }).join('');
 }
-
 function filterAttendance() {
-  var val = document.getElementById('attFilter').value;
-  var filtered = val ? allAttendance.filter(function(r){ return r.date && r.date.startsWith(val); }) : allAttendance;
-  renderAttTable(filtered);
+  var val=document.getElementById('attFilter').value;
+  renderAttTable(val?allAttendance.filter(function(r){return r.date&&r.date.startsWith(val);}):allAttendance);
 }
 
 // ── LEAVE ────────────────────────────────────────────────────
 async function submitLeave() {
-  var date   = document.getElementById('leaveDate').value;
-  var type   = document.getElementById('leaveType').value;
-  var reason = document.getElementById('leaveReason').value;
-  if (!date) { showToast('Please select a date', 'error'); return; }
-  var r = await api({action:'requestLeave', employeeID:user.employeeID, name:user.name, team:user.team, date:date, type:type, reason:reason});
-  showToast(r.message, r.success ? 'success' : 'error');
-  if (r.success) {
-    document.getElementById('leaveReason').value = '';
-    showPage('myLeaves', document.getElementById('nav-myLeaves'));
-  }
+  var date=document.getElementById('leaveDate').value, type=document.getElementById('leaveType').value, reason=document.getElementById('leaveReason').value;
+  if(!date){showToast('Please select a date','error');return;}
+  var r=await api({action:'requestLeave',employeeID:user.employeeID,name:user.name,team:user.team,date:date,type:type,reason:reason});
+  showToast(r.message,r.success?'success':'error');
+  if(r.success){ document.getElementById('leaveReason').value=''; showPage('myLeaves',document.getElementById('nav-myLeaves')); }
 }
 
 async function loadMyLeaves() {
-  var r = await api({action:'getMyLeaves', employeeID:user.employeeID});
-  var tbody = document.getElementById('myLeavesBody');
-  var records = (r.success && r.records) ? r.records : [];
-  if (!records.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No requests yet</td></tr>'; return; }
-  tbody.innerHTML = records.map(function(x) {
+  var r=await api({action:'getMyLeaves',employeeID:user.employeeID});
+  myLeaveRecords=(r.success&&r.records)?r.records:[];
+  var tbody=document.getElementById('myLeavesBody');
+  if(!myLeaveRecords.length){ tbody.innerHTML='<tr><td colspan="5" class="empty-state">No requests yet</td></tr>'; return; }
+  tbody.innerHTML=myLeaveRecords.map(function(x){
     return '<tr><td>'+formatDate(x.date)+'</td><td>'+x.type+'</td>'
-      +'<td style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(x.reason||'—')+'</td>'
+      +'<td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(x.reason||'—')+'</td>'
       +'<td>'+formatDate(x.requestedOn)+'</td>'
       +'<td><span class="badge badge-'+x.status.toLowerCase()+'" style="font-size:0.72rem"><span class="dot"></span>'+x.status+'</span></td></tr>';
   }).join('');
 }
 
+// ── CALENDAR ─────────────────────────────────────────────────
+function buildCalDayNames() {
+  var c=document.getElementById('calDayNames');
+  c.innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(d){return '<div class="cal-day-name">'+d+'</div>';}).join('');
+}
+
+function renderCalendar() {
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent = months[calMonth]+' '+calYear;
+
+  // Build event map from myLeaveRecords
+  var evMap={};
+  myLeaveRecords.forEach(function(l){
+    var key=String(l.date).split('T')[0];
+    if(!evMap[key]) evMap[key]=[];
+    evMap[key].push(l);
+  });
+
+  var first=new Date(calYear,calMonth,1), last=new Date(calYear,calMonth+1,0);
+  var today=new Date(); today.setHours(0,0,0,0);
+  var cells=[];
+  for(var i=0;i<first.getDay();i++) cells.push({date:new Date(calYear,calMonth,-first.getDay()+i+1),current:false});
+  for(var d=1;d<=last.getDate();d++) cells.push({date:new Date(calYear,calMonth,d),current:true});
+  var rem=7-(cells.length%7||7);
+  for(var j=1;j<=rem;j++) cells.push({date:new Date(calYear,calMonth+1,j),current:false});
+
+  var grid=document.getElementById('calGrid');
+  grid.innerHTML=cells.map(function(c){
+    var key=c.date.toISOString().split('T')[0];
+    var isToday=c.date.getTime()===today.getTime();
+    var evs=evMap[key]||[];
+    var hasApproved=evs.some(function(e){return e.status==='Approved';});
+    var hasPending=evs.some(function(e){return e.status==='Pending';});
+    var cls='cal-cell'+(isToday?' today':'')+(c.current?'':' other-month')+(hasApproved?' has-approved':hasPending?' has-pending':'');
+    var evHTML=evs.slice(0,2).map(function(e){
+      return '<div class="cal-event '+e.status.toLowerCase()+'">'+e.type.split(' ')[0]+'</div>';
+    }).join('');
+    return '<div class="'+cls+'"><div class="cal-num">'+c.date.getDate()+'</div>'+evHTML+'</div>';
+  }).join('');
+}
+
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+
 // ── CHANGE PASSWORD ──────────────────────────────────────────
 async function submitChangePassword() {
-  var oldPwd  = document.getElementById('oldPassword').value;
-  var newPwd  = document.getElementById('newPassword').value;
-  var confPwd = document.getElementById('confirmNewPassword').value;
-  var errEl   = document.getElementById('cpError');
-  errEl.style.display = 'none';
-
-  if (!oldPwd) { errEl.textContent='Please enter your current password.'; errEl.style.display='block'; return; }
-  if (!newPwd) { errEl.textContent='Please enter a new password.'; errEl.style.display='block'; return; }
-  if (newPwd.length < 6) { errEl.textContent='New password must be at least 6 characters.'; errEl.style.display='block'; return; }
-  if (newPwd !== confPwd) { errEl.textContent='New passwords do not match.'; errEl.style.display='block'; return; }
-  if (oldPwd === newPwd) { errEl.textContent='New password must be different from current password.'; errEl.style.display='block'; return; }
-
-  var r = await api({action:'changePassword', employeeID:user.employeeID, oldPassword:oldPwd, newPassword:newPwd});
-  if (r.success) {
-    showToast('Password changed successfully! 🎉', 'success');
-    document.getElementById('oldPassword').value = '';
-    document.getElementById('newPassword').value = '';
-    document.getElementById('confirmNewPassword').value = '';
-  } else {
-    errEl.textContent = r.message || 'Failed to change password.';
-    errEl.style.display = 'block';
-  }
+  var oldPwd=document.getElementById('oldPassword').value;
+  var newPwd=document.getElementById('newPassword').value;
+  var confPwd=document.getElementById('confirmNewPassword').value;
+  var errEl=document.getElementById('cpError');
+  errEl.style.display='none';
+  if(!oldPwd){errEl.textContent='Please enter your current password.';errEl.style.display='block';return;}
+  if(!newPwd){errEl.textContent='Please enter a new password.';errEl.style.display='block';return;}
+  if(newPwd.length<6){errEl.textContent='New password must be at least 6 characters.';errEl.style.display='block';return;}
+  if(newPwd!==confPwd){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
+  if(oldPwd===newPwd){errEl.textContent='New password must be different from current.';errEl.style.display='block';return;}
+  var r=await api({action:'changePassword',employeeID:user.employeeID,oldPassword:oldPwd,newPassword:newPwd});
+  if(r.success){
+    showToast('Password changed successfully! 🎉','success');
+    document.getElementById('oldPassword').value='';
+    document.getElementById('newPassword').value='';
+    document.getElementById('confirmNewPassword').value='';
+  } else { errEl.textContent=r.message||'Failed to change password.'; errEl.style.display='block'; }
 }
 
 // ── NAVIGATION ───────────────────────────────────────────────
-function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
-  var pg = document.getElementById('page-' + id);
-  if (pg) pg.classList.add('active');
-  if (el) el.classList.add('active');
+function showPage(id,el) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  var pg=document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  if(el) el.classList.add('active');
   closeSidebar();
-  if (id === 'myLeaves') loadMyLeaves();
-  if (id === 'attendance') renderAttTable(allAttendance);
+  if(id==='myLeaves') loadMyLeaves();
+  if(id==='attendance') renderAttTable(allAttendance);
+  if(id==='calendar'){ buildCalDayNames(); renderCalendar(); }
 }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+function logout(){ localStorage.removeItem('af_user'); location.reload(); }
 
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-}
-
-function logout() {
-  localStorage.removeItem('af_user');
-  location.reload();
-}
-
-// ── HELPERS ──────────────────────────────────────────────────
+// ── API & HELPERS ────────────────────────────────────────────
 async function api(params) {
-  try {
-    var res = await fetch(API_URL, {method:'POST', body:JSON.stringify(params)});
-    return await res.json();
-  } catch(e) {
-    return {success:false, message:'Network error: ' + e.message};
-  }
+  try { var r=await fetch(API_URL,{method:'POST',body:JSON.stringify(params)}); return await r.json(); }
+  catch(e){ return {success:false,message:'Network error: '+e.message}; }
 }
-
-function formatDate(s) {
-  if (!s) return '—';
-  try { return new Date(s).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}); }
-  catch(e) { return s; }
+function formatDate(s){
+  if(!s) return '—';
+  try{ return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){return s;}
 }
-
-function showToast(msg, type) {
-  type = type || 'success';
-  var t = document.getElementById('toast');
-  t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
-  t.className = 'toast ' + type + ' show';
-  setTimeout(function(){ t.classList.remove('show'); }, 3500);
+function showToast(msg,type){
+  type=type||'success';
+  var t=document.getElementById('toast');
+  t.textContent=(type==='success'?'✅ ':'❌ ')+msg;
+  t.className='toast '+type+' show';
+  setTimeout(function(){t.classList.remove('show');},3500);
 }
 </script>
 </body>
