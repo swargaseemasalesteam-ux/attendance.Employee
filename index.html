@@ -79,17 +79,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .stat-label{font-size:0.74rem;color:var(--muted);margin-top:5px;}
 
 /* CLOCK */
-.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);margin-bottom:20px;}
-.clock-inner{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
-.clock-time{font-family:'Lora',serif;font-size:2.8rem;font-weight:700;color:var(--maroon);line-height:1;}
-.clock-date{color:var(--muted);font-size:0.85rem;margin-top:4px;}
-.clock-right{display:flex;flex-direction:column;gap:10px;}
+.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:20px;}
+.clock-card-label{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;}
+.clock-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.clock-left{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+.clock-block{text-align:center;}
+.clock-time-big{font-family:'Lora',serif;font-size:2.2rem;font-weight:700;color:var(--success);line-height:1;letter-spacing:-1px;}
+.clock-time-big.inactive{color:var(--border2);}
+.clock-time-big.done{color:var(--maroon);}
+.clock-block-label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:5px;}
+.clock-arrow{font-size:1.4rem;color:var(--border2);font-weight:300;margin:0 4px;}
+.clock-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.clock-status-text{font-size:0.82rem;font-weight:600;color:var(--success);}
+.clock-status-text.inactive{color:var(--muted);}
 .clock-actions{display:flex;gap:10px;}
-.btn-clock{padding:11px 22px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.btn-clock{padding:10px 22px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:7px;}
 .btn-clock-in{background:linear-gradient(135deg,#2D7A3A,#22653A);color:#fff;box-shadow:0 2px 8px rgba(45,122,58,0.25);}
 .btn-clock-out{background:linear-gradient(135deg,#C0392B,#A93226);color:#fff;box-shadow:0 2px 8px rgba(192,57,43,0.25);}
 .btn-clock:hover{transform:translateY(-1px);filter:brightness(1.06);}
 .btn-clock:disabled{opacity:0.35;cursor:not-allowed;transform:none;filter:none;}
+.btn-clock-icon{width:10px;height:10px;border-radius:50%;background:currentColor;display:inline-block;}
+.btn-clock-in .btn-clock-icon{background:#90EE90;}
+.btn-clock-out .btn-clock-icon{background:#ffaaaa;}
+.btn-clock-out-sq{width:10px;height:10px;background:#ffaaaa;display:inline-block;border-radius:2px;}
 
 /* BADGES */
 .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:0.74rem;font-weight:600;}
@@ -138,6 +150,7 @@ tr:hover td{background:rgba(122,21,24,0.02);}
   .main{margin-left:0;}
   .main-inner{padding:16px 14px 28px;}
   .clock-inner{flex-direction:column;align-items:flex-start;}
+  .clock-right{align-items:flex-start;}
 }
 </style>
 </head>
@@ -199,7 +212,7 @@ tr:hover td{background:rgba(122,21,24,0.02);}
       <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
         <div class="page-title">Good <span id="greeting">day</span>, <span id="greetName">—</span> 👋</div>
-        <div class="page-sub">Here's your attendance overview for today.</div>
+        <div class="page-sub"><span id="liveDate">—</span> &nbsp;·&nbsp; <span id="liveClock" style="font-weight:600;color:var(--maroon);">00:00:00</span></div>
         <div class="stats-grid">
           <div class="stat-card c-maroon"><div class="stat-icon">⏱️</div><div class="stat-value" id="statToday">—</div><div class="stat-label">Today's Hours</div></div>
           <div class="stat-card c-green"><div class="stat-icon">✅</div><div class="stat-value" id="statPresent">—</div><div class="stat-label">Present This Month</div></div>
@@ -207,18 +220,25 @@ tr:hover td{background:rgba(122,21,24,0.02);}
           <div class="stat-card c-navy"><div class="stat-icon">⏳</div><div class="stat-value" id="statPending">—</div><div class="stat-label">Pending Requests</div></div>
         </div>
         <div class="clock-card">
+          <div class="clock-card-label">Today's Attendance</div>
           <div class="clock-inner">
-            <div>
-              <div class="clock-time" id="liveClock">00:00:00</div>
-              <div class="clock-date" id="liveDate">—</div>
-              <div style="margin-top:10px;" id="todayStatusBadge"></div>
-              <div style="margin-top:7px;font-size:0.81rem;color:var(--muted);" id="clockMsg"></div>
+            <div class="clock-left">
+              <div class="clock-block">
+                <div class="clock-time-big" id="clockInDisplay">--:--</div>
+                <div class="clock-block-label">Clock In</div>
+              </div>
+              <div class="clock-arrow">→</div>
+              <div class="clock-block">
+                <div class="clock-time-big inactive" id="clockOutDisplay">--:--</div>
+                <div class="clock-block-label">Clock Out</div>
+              </div>
             </div>
             <div class="clock-right">
               <div class="clock-actions">
-                <button class="btn-clock btn-clock-in" id="btnClockIn" onclick="clockIn()">🟢 Clock In</button>
-                <button class="btn-clock btn-clock-out" id="btnClockOut" onclick="clockOut()" disabled>🔴 Clock Out</button>
+                <button class="btn-clock btn-clock-in" id="btnClockIn" onclick="clockIn()"><span class="btn-clock-icon"></span> Clock In</button>
+                <button class="btn-clock btn-clock-out" id="btnClockOut" onclick="clockOut()" disabled><span class="btn-clock-out-sq"></span> Clock Out</button>
               </div>
+              <div class="clock-status-text inactive" id="clockStatusText">Not clocked in</div>
             </div>
           </div>
         </div>
@@ -358,10 +378,34 @@ async function loadDashboard(){
   allAttendance=aR.success?aR.records:[];
   if(sR.success){
     const{clockedIn,clockedOut,loginTime,logoutTime,duration}=sR;
-    const bEl=document.getElementById('todayStatusBadge'),bIn=document.getElementById('btnClockIn'),bOut=document.getElementById('btnClockOut'),msg=document.getElementById('clockMsg');
-    if(clockedIn&&!clockedOut){bEl.innerHTML=`<span class="badge badge-in"><span class="dot"></span>Currently Clocked In</span>`;bIn.disabled=true;bOut.disabled=false;msg.textContent=`Clocked in at ${loginTime}`;document.getElementById('statToday').textContent='Active';}
-    else if(clockedIn&&clockedOut){bEl.innerHTML=`<span class="badge badge-complete"><span class="dot"></span>Day Complete</span>`;bIn.disabled=true;bOut.disabled=true;msg.textContent=`${loginTime} → ${logoutTime} · ${duration}`;document.getElementById('statToday').textContent=duration;}
-    else{bEl.innerHTML=`<span class="badge" style="background:#F0EDE8;color:var(--muted)"><span class="dot"></span>Not Clocked In</span>`;bIn.disabled=false;bOut.disabled=true;document.getElementById('statToday').textContent='—';}
+    const bIn=document.getElementById('btnClockIn'),bOut=document.getElementById('btnClockOut');
+    const inDisp=document.getElementById('clockInDisplay'),outDisp=document.getElementById('clockOutDisplay');
+    const statusTxt=document.getElementById('clockStatusText');
+    if(clockedIn&&!clockedOut){
+      inDisp.textContent=loginTime?loginTime.substring(0,5):'--:--';
+      inDisp.className='clock-time-big';
+      outDisp.textContent='--:--';
+      outDisp.className='clock-time-big inactive';
+      statusTxt.textContent='Currently clocked in';
+      statusTxt.className='clock-status-text';
+      bIn.disabled=true;bOut.disabled=false;
+      document.getElementById('statToday').textContent='Active';
+    } else if(clockedIn&&clockedOut){
+      inDisp.textContent=loginTime?loginTime.substring(0,5):'--:--';
+      inDisp.className='clock-time-big';
+      outDisp.textContent=logoutTime?logoutTime.substring(0,5):'--:--';
+      outDisp.className='clock-time-big done';
+      statusTxt.textContent='Day complete · '+duration;
+      statusTxt.className='clock-status-text';
+      bIn.disabled=true;bOut.disabled=true;
+      document.getElementById('statToday').textContent=duration;
+    } else {
+      inDisp.textContent='--:--';inDisp.className='clock-time-big inactive';
+      outDisp.textContent='--:--';outDisp.className='clock-time-big inactive';
+      statusTxt.textContent='Not clocked in';statusTxt.className='clock-status-text inactive';
+      bIn.disabled=false;bOut.disabled=true;
+      document.getElementById('statToday').textContent='—';
+    }
   }
   const n=new Date(),ym=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;
   document.getElementById('statPresent').textContent=allAttendance.filter(r=>r.date?.startsWith(ym)).length;
