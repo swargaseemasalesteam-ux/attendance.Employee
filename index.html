@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AttendFlow — Employee Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#F2EDE4;--surface:#FFFFFF;--surface2:#FAF6F0;--border:#E0D5C5;--border2:#C8B89A;
+  --maroon:#7A1518;--maroon-dark:#5C0F12;--maroon-light:#9B1C20;
+  --gold:#B8860B;--gold-light:#D4A017;
+  --navy:#1A2B5C;--navy-light:#243570;
+  --success:#2D7A3A;--success-bg:#E8F5EA;
+  --warning:#B8860B;--warning-bg:#FDF6E3;
+  --danger:#C0392B;--danger-bg:#FDECEA;
+  --text:#1A1208;--text2:#3D2B1A;--muted:#7A6A5A;
+  --radius:12px;--shadow:0 2px 16px rgba(122,21,24,0.08);--shadow-md:0 4px 24px rgba(122,21,24,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:100;padding:24px;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:420px;box-shadow:var(--shadow-md);overflow:hidden;}
+.login-header{background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));padding:30px 36px 26px;text-align:center;}
+.login-header h1{font-family:'Lora',serif;font-size:1.9rem;color:#fff;}
+.login-header p{color:rgba(255,255,255,0.72);font-size:0.83rem;margin-top:4px;}
+.login-body{padding:30px 36px;}
+.first-login-note{background:rgba(26,43,92,0.07);border:1px solid rgba(26,43,92,0.2);border-radius:8px;padding:11px 14px;font-size:0.82rem;color:var(--navy);margin-bottom:16px;display:none;}
+.form-group{margin-bottom:15px;}
+.form-group label{display:block;font-size:0.73rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:7px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.92rem;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--maroon);}
+.form-group textarea{resize:vertical;min-height:85px;}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.1s;margin-top:4px;}
+.btn-primary:hover{opacity:0.92;}
+.btn-primary:active{transform:scale(0.98);}
+.login-error{color:var(--danger);font-size:0.82rem;text-align:center;margin-top:10px;display:none;}
+
+/* SHELL */
+#app{display:none;min-height:100vh;}
+.topbar{position:fixed;top:0;left:0;right:0;height:56px;background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));display:flex;align-items:center;padding:0 20px;z-index:100;box-shadow:0 2px 12px rgba(90,15,18,0.3);}
+.topbar-logo h2{font-family:'Lora',serif;font-size:1.2rem;color:#fff;}
+.topbar-logo span{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.9);font-size:0.65rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:0.08em;margin-left:8px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.topbar-user{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9);font-size:0.85rem;}
+.topbar-avatar{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;color:#fff;}
+.topbar-team{color:rgba(255,255,255,0.55);font-size:0.75rem;}
+.topbar-logout{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:7px;padding:5px 12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:background 0.2s;}
+.topbar-logout:hover{background:rgba(255,255,255,0.25);}
+
+.sidebar{position:fixed;left:0;top:56px;bottom:0;width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 12px;z-index:50;transition:transform 0.3s;}
+.sidebar-section{font-size:0.67rem;font-weight:700;color:var(--border2);text-transform:uppercase;letter-spacing:0.1em;padding:10px 13px 5px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:500;font-size:0.87rem;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;}
+.nav-item:hover{background:var(--surface2);color:var(--text2);}
+.nav-item.active{background:rgba(122,21,24,0.08);color:var(--maroon);border-color:rgba(122,21,24,0.15);font-weight:600;}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;}
+.nav-divider{height:1px;background:var(--border);margin:8px 4px;}
+
+.main{margin-left:220px;padding-top:56px;min-height:100vh;}
+.main-inner{padding:26px 26px 32px;}
+.page{display:none;animation:fadeIn 0.25s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+.page-title{font-family:'Lora',serif;font-size:1.6rem;color:var(--maroon-dark);margin-bottom:3px;}
+.page-sub{color:var(--muted);font-size:0.86rem;margin-bottom:20px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:20px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+.stat-card.c-maroon{border-top:3px solid var(--maroon);}
+.stat-card.c-green{border-top:3px solid var(--success);}
+.stat-card.c-gold{border-top:3px solid var(--gold);}
+.stat-card.c-navy{border-top:3px solid var(--navy);}
+.stat-icon{font-size:1.25rem;margin-bottom:10px;}
+.stat-value{font-size:1.6rem;font-weight:700;color:var(--text);font-family:'Lora',serif;line-height:1;}
+.stat-label{font-size:0.74rem;color:var(--muted);margin-top:5px;}
+
+/* CLOCK */
+.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);margin-bottom:20px;}
+.clock-inner{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+.clock-time{font-family:'Lora',serif;font-size:2.8rem;font-weight:700;color:var(--maroon);line-height:1;}
+.clock-date{color:var(--muted);font-size:0.85rem;margin-top:4px;}
+.clock-right{display:flex;flex-direction:column;gap:10px;}
+.clock-actions{display:flex;gap:10px;}
+.btn-clock{padding:11px 22px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.btn-clock-in{background:linear-gradient(135deg,#2D7A3A,#22653A);color:#fff;box-shadow:0 2px 8px rgba(45,122,58,0.25);}
+.btn-clock-out{background:linear-gradient(135deg,#C0392B,#A93226);color:#fff;box-shadow:0 2px 8px rgba(192,57,43,0.25);}
+.btn-clock:hover{transform:translateY(-1px);filter:brightness(1.06);}
+.btn-clock:disabled{opacity:0.35;cursor:not-allowed;transform:none;filter:none;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:0.74rem;font-weight:600;}
+.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.badge-in{background:var(--success-bg);color:var(--success);}
+.badge-out{background:var(--danger-bg);color:var(--danger);}
+.badge-pending{background:var(--warning-bg);color:var(--warning);}
+.badge-approved{background:var(--success-bg);color:var(--success);}
+.badge-rejected{background:var(--danger-bg);color:var(--danger);}
+.badge-complete{background:rgba(26,43,92,0.08);color:var(--navy);}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px;}
+.card-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface2);}
+.card-header h3{font-size:0.9rem;font-weight:600;color:var(--text2);}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{padding:10px 14px;text-align:left;font-size:0.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;background:var(--surface2);border-bottom:1px solid var(--border);}
+td{padding:12px 14px;font-size:0.85rem;border-bottom:1px solid var(--border);color:var(--text2);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(122,21,24,0.02);}
+.empty-state{text-align:center;padding:38px;color:var(--muted);font-size:0.86rem;}
+
+/* LEAVE FORM */
+.leave-form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:500px;box-shadow:var(--shadow);}
+.leave-form-card h3{font-family:'Lora',serif;font-size:1.05rem;color:var(--maroon-dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.btn-submit{background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:11px 26px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+.btn-submit:hover{opacity:0.9;}
+.btn-sm{background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:0.79rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.btn-sm:hover{border-color:var(--maroon);color:var(--maroon);}
+.filter-input{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.8rem;}
+.filter-input:focus{outline:none;border-color:var(--maroon);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 18px;font-size:0.85rem;box-shadow:var(--shadow-md);z-index:9999;display:flex;align-items:center;gap:9px;transform:translateY(80px);opacity:0;transition:all 0.3s;color:var(--text2);}
+.toast.show{transform:none;opacity:1;}
+.toast.success{border-left:3px solid var(--success);}
+.toast.error{border-left:3px solid var(--danger);}
+
+/* MOBILE */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;display:none;}
+.overlay.show{display:block;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:none;}
+  .main{margin-left:0;}
+  .main-inner{padding:16px 14px 28px;}
+  .clock-inner{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" style="display:none;">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>AttendFlow</h1>
+      <p>Swargaseema Employee Portal</p>
+    </div>
+    <div class="login-body">
+      <div class="first-login-note" id="firstLoginNote">👋 Welcome! This is your first login — please set your password below.</div>
+      <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter your username"/></div>
+      <div class="form-group" id="passwordGroup"><label id="passwordLabel">Password</label><input type="password" id="loginPassword" placeholder="Enter your password" onkeydown="if(event.key==='Enter')handleLogin()"/></div>
+      <div class="form-group" id="confirmGroup" style="display:none;"><label>Confirm Password</label><input type="password" id="loginConfirm" placeholder="Re-enter your password"/></div>
+      <button class="btn-primary" onclick="handleLogin()"><span id="loginBtnText">Sign In</span></button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo"><h2>AttendFlow</h2><span>EMPLOYEE</span></div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-avatar" id="userAvatar">?</div>
+        <span id="userName">—</span>
+        <span class="topbar-team" id="userTeam">—</span>
+      </div>
+      <button class="topbar-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-section">My Portal</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('attendance',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>Attendance
+    </div>
+    <div class="nav-divider"></div>
+    <div class="sidebar-section">Leave</div>
+    <div class="nav-item" onclick="showPage('leaves',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Request Leave
+    </div>
+    <div class="nav-item" onclick="showPage('myLeaves',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>My Leaves
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-inner">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-title">Good <span id="greeting">day</span>, <span id="greetName">—</span> 👋</div>
+        <div class="page-sub">Here's your attendance overview for today.</div>
+        <div class="stats-grid">
+          <div class="stat-card c-maroon"><div class="stat-icon">⏱️</div><div class="stat-value" id="statToday">—</div><div class="stat-label">Today's Hours</div></div>
+          <div class="stat-card c-green"><div class="stat-icon">✅</div><div class="stat-value" id="statPresent">—</div><div class="stat-label">Present This Month</div></div>
+          <div class="stat-card c-gold"><div class="stat-icon">📅</div><div class="stat-value" id="statLeaves">—</div><div class="stat-label">Leaves This Month</div></div>
+          <div class="stat-card c-navy"><div class="stat-icon">⏳</div><div class="stat-value" id="statPending">—</div><div class="stat-label">Pending Requests</div></div>
+        </div>
+        <div class="clock-card">
+          <div class="clock-inner">
+            <div>
+              <div class="clock-time" id="liveClock">00:00:00</div>
+              <div class="clock-date" id="liveDate">—</div>
+              <div style="margin-top:10px;" id="todayStatusBadge"></div>
+              <div style="margin-top:7px;font-size:0.81rem;color:var(--muted);" id="clockMsg"></div>
+            </div>
+            <div class="clock-right">
+              <div class="clock-actions">
+                <button class="btn-clock btn-clock-in" id="btnClockIn" onclick="clockIn()">🟢 Clock In</button>
+                <button class="btn-clock btn-clock-out" id="btnClockOut" onclick="clockOut()" disabled>🔴 Clock Out</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Recent Attendance</h3></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Duration</th></tr></thead>
+            <tbody id="recentAttBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div class="page" id="page-attendance">
+        <div class="page-title">Attendance Log</div>
+        <div class="page-sub">Your complete daily attendance history with timings.</div>
+        <div class="card">
+          <div class="card-header">
+            <h3>All Records</h3>
+            <input type="month" id="attFilter" onchange="filterAttendance()" class="filter-input"/>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Hours Worked</th><th>Status</th></tr></thead>
+            <tbody id="attBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- REQUEST LEAVE -->
+      <div class="page" id="page-leaves">
+        <div class="page-title">Request Leave</div>
+        <div class="page-sub">Submit a weekly off or leave request for admin approval.</div>
+        <div class="leave-form-card">
+          <h3>New Leave Request</h3>
+          <div class="form-group"><label>Leave Type</label>
+            <select id="leaveType">
+              <option value="Weekly Off">Weekly Off</option>
+              <option value="Sick Leave">Sick Leave</option>
+              <option value="Personal Leave">Personal Leave</option>
+              <option value="Emergency Leave">Emergency Leave</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Date</label><input type="date" id="leaveDate"/></div>
+          <div class="form-group"><label>Reason (optional)</label><textarea id="leaveReason" placeholder="Briefly describe your reason..."></textarea></div>
+          <button class="btn-submit" onclick="submitLeave()">Submit Request</button>
+        </div>
+      </div>
+
+      <!-- MY LEAVES -->
+      <div class="page" id="page-myLeaves">
+        <div class="page-title">My Leave Requests</div>
+        <div class="page-sub">Track the status of all your submitted requests.</div>
+        <div class="card">
+          <div class="card-header"><h3>All Requests</h3><button class="btn-sm" onclick="loadMyLeaves()">↻ Refresh</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Requested On</th><th>Status</th></tr></thead>
+            <tbody id="myLeavesBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzFDjgpt5S-fruEBflRHzVlbQqp-ADZ5_NoOk7YdRVlh5oRG8-oiL434JdtRAs032nn5g/exec"; // 🔴 Replace after deploying
+let user=null,isFirstLogin=false,allAttendance=[];
+
+window.addEventListener('load',()=>{
+  const saved=localStorage.getItem('af_user');
+  if(saved){user=JSON.parse(saved);initApp();}
+  else{document.getElementById('loginScreen').style.display='flex';}
+  startClock();
+  const h=new Date().getHours();
+  document.getElementById('greeting').textContent=h<12?'morning':h<17?'afternoon':'evening';
+});
+
+function startClock(){
+  function tick(){
+    const n=new Date();
+    document.getElementById('liveClock').textContent=n.toLocaleTimeString('en-IN',{hour12:false});
+    document.getElementById('liveDate').textContent=n.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  }tick();setInterval(tick,1000);
+}
+
+async function handleLogin(){
+  const username=document.getElementById('loginUsername').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  const confirm=document.getElementById('loginConfirm').value;
+  document.getElementById('loginError').style.display='none';
+  if(!username){showErr('Please enter your username.');return;}
+  if(isFirstLogin){
+    if(!password){showErr('Please set a password.');return;}
+    if(password.length<6){showErr('Minimum 6 characters required.');return;}
+    if(password!==confirm){showErr('Passwords do not match.');return;}
+    const res=await api({action:'setPassword',username,password,employeeID:user.employeeID});
+    if(res.success){user={employeeID:res.employeeID,name:res.name,team:res.team,role:res.role};localStorage.setItem('af_user',JSON.stringify(user));initApp();}
+    else showErr(res.message);
+    return;
+  }
+  const res=await api({action:'login',username,password:password||'__check__'});
+  if(res.success&&res.firstLogin){
+    isFirstLogin=true;user={employeeID:res.employeeID};
+    document.getElementById('firstLoginNote').style.display='block';
+    document.getElementById('passwordLabel').textContent='Set New Password';
+    document.getElementById('confirmGroup').style.display='block';
+    document.getElementById('loginBtnText').textContent='Set Password & Sign In';
+  }else if(res.success&&!res.firstLogin){
+    if(res.role==='admin'){showErr('Please use the Admin Portal.');return;}
+    user={employeeID:res.employeeID,name:res.name,team:res.team,role:res.role};
+    localStorage.setItem('af_user',JSON.stringify(user));initApp();
+  }else showErr(res.message||'Login failed.');
+}
+function showErr(m){const e=document.getElementById('loginError');e.textContent=m;e.style.display='block';}
+
+async function initApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('userName').textContent=user.name;
+  document.getElementById('userTeam').textContent=user.team;
+  document.getElementById('userAvatar').textContent=(user.name||'?')[0].toUpperCase();
+  document.getElementById('greetName').textContent=user.name?.split(' ')[0]||'';
+  const t=new Date();t.setDate(t.getDate()+1);
+  document.getElementById('leaveDate').value=t.toISOString().split('T')[0];
+  await loadDashboard();
+}
+
+async function loadDashboard(){
+  const[sR,aR,lR]=await Promise.all([
+    api({action:'todayStatus',employeeID:user.employeeID}),
+    api({action:'getAttendance',employeeID:user.employeeID}),
+    api({action:'getMyLeaves',employeeID:user.employeeID})
+  ]);
+  allAttendance=aR.success?aR.records:[];
+  if(sR.success){
+    const{clockedIn,clockedOut,loginTime,logoutTime,duration}=sR;
+    const bEl=document.getElementById('todayStatusBadge'),bIn=document.getElementById('btnClockIn'),bOut=document.getElementById('btnClockOut'),msg=document.getElementById('clockMsg');
+    if(clockedIn&&!clockedOut){bEl.innerHTML=`<span class="badge badge-in"><span class="dot"></span>Currently Clocked In</span>`;bIn.disabled=true;bOut.disabled=false;msg.textContent=`Clocked in at ${loginTime}`;document.getElementById('statToday').textContent='Active';}
+    else if(clockedIn&&clockedOut){bEl.innerHTML=`<span class="badge badge-complete"><span class="dot"></span>Day Complete</span>`;bIn.disabled=true;bOut.disabled=true;msg.textContent=`${loginTime} → ${logoutTime} · ${duration}`;document.getElementById('statToday').textContent=duration;}
+    else{bEl.innerHTML=`<span class="badge" style="background:#F0EDE8;color:var(--muted)"><span class="dot"></span>Not Clocked In</span>`;bIn.disabled=false;bOut.disabled=true;document.getElementById('statToday').textContent='—';}
+  }
+  const n=new Date(),ym=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('statPresent').textContent=allAttendance.filter(r=>r.date?.startsWith(ym)).length;
+  const lv=lR.success?lR.records:[];
+  document.getElementById('statLeaves').textContent=lv.filter(l=>l.date?.startsWith(ym)&&l.status==='Approved').length;
+  document.getElementById('statPending').textContent=lv.filter(l=>l.status==='Pending').length;
+  document.getElementById('recentAttBody').innerHTML=allAttendance.slice(0,7).map(r=>`<tr><td>${formatDate(r.date)}</td><td>${r.loginTime||'—'}</td><td>${r.logoutTime||'—'}</td><td>${r.duration||'—'}</td></tr>`).join('')||'<tr><td colspan="4" class="empty-state">No records yet</td></tr>';
+  renderAttTable(allAttendance);
+}
+
+async function clockIn(){document.getElementById('btnClockIn').disabled=true;const r=await api({action:'clockIn',employeeID:user.employeeID,name:user.name,team:user.team});showToast(r.message,r.success?'success':'error');if(r.success)loadDashboard();else document.getElementById('btnClockIn').disabled=false;}
+async function clockOut(){document.getElementById('btnClockOut').disabled=true;const r=await api({action:'clockOut',employeeID:user.employeeID});showToast(r.message,r.success?'success':'error');if(r.success)loadDashboard();else document.getElementById('btnClockOut').disabled=false;}
+
+function renderAttTable(records){
+  document.getElementById('attBody').innerHTML=records.length?records.map(r=>`<tr><td>${formatDate(r.date)}</td><td>${r.loginTime||'—'}</td><td>${r.logoutTime||'—'}</td><td>${r.duration||'—'}</td><td>${r.logoutTime?`<span class="badge badge-complete" style="font-size:0.72rem"><span class="dot"></span>Complete</span>`:`<span class="badge badge-in" style="font-size:0.72rem"><span class="dot"></span>Active</span>`}</td></tr>`).join(''):'<tr><td colspan="5" class="empty-state">No records found</td></tr>';
+}
+function filterAttendance(){const v=document.getElementById('attFilter').value;renderAttTable(v?allAttendance.filter(r=>r.date?.startsWith(v)):allAttendance);}
+
+async function submitLeave(){
+  const date=document.getElementById('leaveDate').value,type=document.getElementById('leaveType').value,reason=document.getElementById('leaveReason').value;
+  if(!date){showToast('Please select a date','error');return;}
+  const r=await api({action:'requestLeave',employeeID:user.employeeID,name:user.name,team:user.team,date,type,reason});
+  showToast(r.message,r.success?'success':'error');
+  if(r.success){document.getElementById('leaveReason').value='';showPage('myLeaves',document.querySelector('[onclick*="myLeaves"]'));}
+}
+
+async function loadMyLeaves(){
+  const r=await api({action:'getMyLeaves',employeeID:user.employeeID});
+  document.getElementById('myLeavesBody').innerHTML=(r.success&&r.records.length)?r.records.map(x=>`<tr><td>${formatDate(x.date)}</td><td>${x.type}</td><td style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${x.reason||'—'}</td><td>${formatDate(x.requestedOn)}</td><td><span class="badge badge-${x.status.toLowerCase()}" style="font-size:0.72rem"><span class="dot"></span>${x.status}</span></td></tr>`).join(''):'<tr><td colspan="5" class="empty-state">No requests yet</td></tr>';
+}
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id)?.classList.add('active');
+  if(el)el.classList.add('active');
+  closeSidebar();
+  if(id==='myLeaves')loadMyLeaves();
+  if(id==='attendance')renderAttTable(allAttendance);
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
+function logout(){localStorage.removeItem('af_user');location.reload();}
+async function api(p){try{const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(p)});return await r.json();}catch(e){return{success:false,message:'Network error: '+e.message};}}
+function formatDate(s){if(!s)return'—';try{return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return s;}}
+function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=(type==='success'?'✅ ':'❌ ')+msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3500);}
+</script>
+</body>
+</html>
