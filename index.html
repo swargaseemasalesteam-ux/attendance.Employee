@@ -533,88 +533,130 @@ async function loadDashboard() {
 }
 
 function updateClockUI(sR) {
-  var inDisp=document.getElementById('clockInDisplay'), outDisp=document.getElementById('clockOutDisplay');
-  var statusTxt=document.getElementById('clockStatusText');
-  var btnIn=document.getElementById('btnClockIn'), btnOut=document.getElementById('btnClockOut');
-  if (!sR.success) return;
+  var inDisp    = document.getElementById('clockInDisplay');
+  var outDisp   = document.getElementById('clockOutDisplay');
+  var statusTxt = document.getElementById('clockStatusText');
+  var btnIn     = document.getElementById('btnClockIn');
+  var btnOut    = document.getElementById('btnClockOut');
+  if (!sR || !sR.success) return;
+
+  var loginTime  = sR.loginTime  || '';
+  var logoutTime = sR.logoutTime || '';
+
+  // Clean up time values — remove any that are just "0" or empty
+  var hasLogin  = loginTime  !== '' && loginTime  !== '0' && loginTime  !== '00:00:00';
+  var hasLogout = logoutTime !== '' && logoutTime !== '0' && logoutTime !== '00:00:00';
+
   if (sR.clockedIn && !sR.clockedOut) {
-    inDisp.textContent  = sR.loginTime  ? sR.loginTime.substring(0,5)  : '--:--'; inDisp.className  = 'clock-time-big';
-    outDisp.textContent = '--:--'; outDisp.className = 'clock-time-big inactive';
-    statusTxt.textContent = 'Currently clocked in'; statusTxt.className = 'clock-status-text';
-    btnIn.disabled=true; btnOut.disabled=false;
+    inDisp.textContent    = hasLogin ? loginTime.substring(0,5) : '--:--';
+    inDisp.className      = 'clock-time-big';
+    outDisp.textContent   = '--:--';
+    outDisp.className     = 'clock-time-big inactive';
+    statusTxt.textContent = 'Currently clocked in';
+    statusTxt.className   = 'clock-status-text';
+    btnIn.disabled        = true;
+    btnOut.disabled       = false;
+    document.getElementById('statToday').textContent = 'Active';
   } else if (sR.clockedIn && sR.clockedOut) {
-    inDisp.textContent  = sR.loginTime  ? sR.loginTime.substring(0,5)  : '--:--'; inDisp.className  = 'clock-time-big';
-    outDisp.textContent = sR.logoutTime ? sR.logoutTime.substring(0,5) : '--:--'; outDisp.className = 'clock-time-big done';
-    statusTxt.textContent = 'Day complete · '+(sR.duration||''); statusTxt.className = 'clock-status-text';
-    btnIn.disabled=true; btnOut.disabled=true;
+    inDisp.textContent    = hasLogin  ? loginTime.substring(0,5)  : '--:--';
+    inDisp.className      = 'clock-time-big';
+    outDisp.textContent   = hasLogout ? logoutTime.substring(0,5) : '--:--';
+    outDisp.className     = 'clock-time-big done';
+    statusTxt.textContent = 'Day complete · ' + (sR.duration || '');
+    statusTxt.className   = 'clock-status-text';
+    btnIn.disabled        = true;
+    btnOut.disabled       = true;
+    document.getElementById('statToday').textContent = sR.duration || '—';
   } else {
-    inDisp.textContent='--:--'; inDisp.className='clock-time-big inactive';
-    outDisp.textContent='--:--'; outDisp.className='clock-time-big inactive';
-    statusTxt.textContent='Not clocked in'; statusTxt.className='clock-status-text inactive';
-    btnIn.disabled=false; btnOut.disabled=true;
+    inDisp.textContent    = '--:--';
+    inDisp.className      = 'clock-time-big inactive';
+    outDisp.textContent   = '--:--';
+    outDisp.className     = 'clock-time-big inactive';
+    statusTxt.textContent = 'Not clocked in';
+    statusTxt.className   = 'clock-status-text inactive';
+    btnIn.disabled        = false;
+    btnOut.disabled       = true;
+    document.getElementById('statToday').textContent = '—';
   }
 }
 
 // ── CLOCK IN/OUT ─────────────────────────────────────────────
+// ── CLOCK IN/OUT ─────────────────────────────────────────────
+var clockProcessing = false;
+
 async function clockIn() {
-  var btn = document.getElementById('btnClockIn');
-  btn.disabled = true;
-  btn.textContent = 'Clocking in...';
+  if (clockProcessing) return;
+  clockProcessing = true;
+
+  var btnIn  = document.getElementById('btnClockIn');
+  var btnOut = document.getElementById('btnClockOut');
+  btnIn.disabled  = true;
+  btnOut.disabled = true;
+  btnIn.innerHTML = '<span class="btn-dot"></span> Please wait...';
 
   var r = await api({action:'clockIn', employeeID:user.employeeID, name:user.name, team:user.team});
-  showToast(r.message, r.success ? 'success' : 'error');
 
   if (r.success) {
-    // Directly update the UI using the time from the toast message
-    var now = new Date();
-    var timeStr = now.toLocaleTimeString('en-IN', {hour12:false});
-    var inDisp  = document.getElementById('clockInDisplay');
-    var outDisp = document.getElementById('clockOutDisplay');
+    showToast(r.message, 'success');
+    var inDisp    = document.getElementById('clockInDisplay');
+    var outDisp   = document.getElementById('clockOutDisplay');
     var statusTxt = document.getElementById('clockStatusText');
-    var btnOut  = document.getElementById('btnClockOut');
 
-    inDisp.textContent  = timeStr.substring(0,5);
-    inDisp.className    = 'clock-time-big';
-    outDisp.textContent = '--:--';
-    outDisp.className   = 'clock-time-big inactive';
+    var t = r.loginTime ? r.loginTime.substring(0,5) : new Date().toLocaleTimeString('en-IN',{hour12:false}).substring(0,5);
+    inDisp.textContent    = t;
+    inDisp.className      = 'clock-time-big';
+    outDisp.textContent   = '--:--';
+    outDisp.className     = 'clock-time-big inactive';
     statusTxt.textContent = 'Currently clocked in';
-    statusTxt.className = 'clock-status-text';
-    btn.disabled = true;
-    btnOut.disabled = false;
+    statusTxt.className   = 'clock-status-text';
+    btnIn.disabled        = true;
+    btnOut.disabled       = false;
+    btnIn.innerHTML       = '<span class="btn-dot"></span> Clock In';
     document.getElementById('statToday').textContent = 'Active';
   } else {
-    btn.disabled = false;
+    showToast(r.message, 'error');
+    btnIn.disabled  = false;
+    btnOut.disabled = true;
+    btnIn.innerHTML = '<span class="btn-dot"></span> Clock In';
   }
-  // Restore button text
-  btn.innerHTML = '<span class="btn-dot"></span> Clock In';
+
+  clockProcessing = false;
 }
 
 async function clockOut() {
-  var btn = document.getElementById('btnClockOut');
-  btn.disabled = true;
-  btn.textContent = 'Clocking out...';
+  if (clockProcessing) return;
+  clockProcessing = true;
+
+  var btnIn  = document.getElementById('btnClockIn');
+  var btnOut = document.getElementById('btnClockOut');
+  btnIn.disabled  = true;
+  btnOut.disabled = true;
+  btnOut.innerHTML = '<span class="btn-sq"></span> Please wait...';
 
   var r = await api({action:'clockOut', employeeID:user.employeeID});
-  showToast(r.message, r.success ? 'success' : 'error');
 
   if (r.success) {
-    var now = new Date();
-    var timeStr = now.toLocaleTimeString('en-IN', {hour12:false});
+    showToast(r.message, 'success');
     var outDisp   = document.getElementById('clockOutDisplay');
     var statusTxt = document.getElementById('clockStatusText');
-    var btnIn     = document.getElementById('btnClockIn');
 
-    outDisp.textContent   = timeStr.substring(0,5);
+    var t = r.logoutTime ? r.logoutTime.substring(0,5) : new Date().toLocaleTimeString('en-IN',{hour12:false}).substring(0,5);
+    outDisp.textContent   = t;
     outDisp.className     = 'clock-time-big done';
     statusTxt.textContent = 'Day complete · ' + (r.duration || '');
     statusTxt.className   = 'clock-status-text';
-    btn.disabled  = true;
-    btnIn.disabled = true;
+    btnIn.disabled        = true;
+    btnOut.disabled       = true;
+    btnOut.innerHTML      = '<span class="btn-sq"></span> Clock Out';
     document.getElementById('statToday').textContent = r.duration || '—';
   } else {
-    btn.disabled = false;
+    showToast(r.message, 'error');
+    btnIn.disabled  = true;
+    btnOut.disabled = false;
+    btnOut.innerHTML = '<span class="btn-sq"></span> Clock Out';
   }
-  btn.innerHTML = '<span class="btn-sq"></span> Clock Out';
+
+  clockProcessing = false;
 }
 
 // ── ATTENDANCE ───────────────────────────────────────────────
