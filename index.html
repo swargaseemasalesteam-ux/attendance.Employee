@@ -557,18 +557,32 @@ function updateClockUI(sR) {
 
 // ── CLOCK IN/OUT ─────────────────────────────────────────────
 async function clockIn() {
-  document.getElementById('btnClockIn').disabled=true;
+  document.getElementById('btnClockIn').disabled = true;
+  showToast('Clocking in...', 'success');
   var r = await api({action:'clockIn', employeeID:user.employeeID, name:user.name, team:user.team});
-  showToast(r.message, r.success?'success':'error');
-  if(r.success){ var sR=await api({action:'todayStatus',employeeID:user.employeeID}); updateClockUI(sR); }
-  else document.getElementById('btnClockIn').disabled=false;
+  showToast(r.message, r.success ? 'success' : 'error');
+  if(r.success) {
+    // Wait a moment then reload full dashboard to ensure sheet data is fresh
+    setTimeout(async function() {
+      await loadDashboard();
+    }, 1500);
+  } else {
+    document.getElementById('btnClockIn').disabled = false;
+  }
 }
+
 async function clockOut() {
-  document.getElementById('btnClockOut').disabled=true;
+  document.getElementById('btnClockOut').disabled = true;
+  showToast('Clocking out...', 'success');
   var r = await api({action:'clockOut', employeeID:user.employeeID});
-  showToast(r.message, r.success?'success':'error');
-  if(r.success){ var sR=await api({action:'todayStatus',employeeID:user.employeeID}); updateClockUI(sR); renderAttTable(allAttendance); }
-  else document.getElementById('btnClockOut').disabled=false;
+  showToast(r.message, r.success ? 'success' : 'error');
+  if(r.success) {
+    setTimeout(async function() {
+      await loadDashboard();
+    }, 1500);
+  } else {
+    document.getElementById('btnClockOut').disabled = false;
+  }
 }
 
 // ── ATTENDANCE ───────────────────────────────────────────────
