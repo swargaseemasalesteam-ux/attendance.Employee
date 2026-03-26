@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>AttendFlow — Employee Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -14,173 +14,203 @@
   --warning:#B8860B;--warning-bg:#FDF6E3;
   --danger:#C0392B;--danger-bg:#FDECEA;
   --text:#1A1208;--text2:#3D2B1A;--muted:#7A6A5A;
-  --radius:12px;--shadow:0 2px 16px rgba(122,21,24,0.08);--shadow-md:0 4px 24px rgba(122,21,24,0.12);
+  --sidebar-w:220px;--topbar-h:56px;
+  --radius:12px;
+  --shadow:0 2px 12px rgba(122,21,24,0.07);
+  --shadow-md:0 4px 20px rgba(122,21,24,0.12);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-tap-highlight-color:transparent;}
 
-/* LOGIN */
-#loginScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:100;padding:24px;}
-.login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:420px;box-shadow:var(--shadow-md);overflow:hidden;}
-.login-header{background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));padding:30px 36px 26px;text-align:center;}
-.login-header h1{font-family:'Lora',serif;font-size:1.9rem;color:#fff;}
-.login-header p{color:rgba(255,255,255,0.72);font-size:0.83rem;margin-top:4px;}
-.login-body{padding:30px 36px;}
-.first-login-note{background:rgba(26,43,92,0.07);border:1px solid rgba(26,43,92,0.2);border-radius:8px;padding:11px 14px;font-size:0.82rem;color:var(--navy);margin-bottom:16px;display:none;}
-.form-group{margin-bottom:15px;}
-.form-group label{display:block;font-size:0.73rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:7px;}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.92rem;transition:border-color 0.2s;}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--maroon);}
-.form-group textarea{resize:vertical;min-height:85px;}
-.btn-primary{width:100%;background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.1s;margin-top:4px;}
-.btn-primary:hover{opacity:0.92;}
-.btn-primary:active{transform:scale(0.98);}
-.login-error{color:var(--danger);font-size:0.82rem;text-align:center;margin-top:10px;display:none;}
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:200;padding:16px;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;width:100%;max-width:400px;box-shadow:var(--shadow-md);overflow:hidden;}
+.login-header{background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));padding:28px 32px 24px;text-align:center;}
+.login-header h1{font-family:'Lora',serif;font-size:1.8rem;color:#fff;}
+.login-header p{color:rgba(255,255,255,0.7);font-size:0.82rem;margin-top:4px;}
+.login-body{padding:26px 32px;}
+.first-note{background:rgba(26,43,92,0.07);border:1px solid rgba(26,43,92,0.2);border-radius:8px;padding:10px 14px;font-size:0.81rem;color:var(--navy);margin-bottom:14px;display:none;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:0.71rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:border-color 0.2s;-webkit-appearance:none;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--maroon);}
+.fg textarea{resize:vertical;min-height:80px;}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.93rem;font-weight:600;cursor:pointer;margin-top:4px;-webkit-appearance:none;}
+.login-error{color:var(--danger);font-size:0.81rem;text-align:center;margin-top:10px;display:none;}
+
+/* ── APP SHELL ── */
+#app{display:none;min-height:100vh;}
 
 /* TOPBAR */
-#app{display:none;min-height:100vh;}
-.topbar{position:fixed;top:0;left:0;right:0;height:56px;background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));display:flex;align-items:center;padding:0 20px;z-index:100;box-shadow:0 2px 12px rgba(90,15,18,0.3);}
-.topbar-logo h2{font-family:'Lora',serif;font-size:1.2rem;color:#fff;}
-.topbar-logo span{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.9);font-size:0.65rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:0.08em;margin-left:8px;}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
-.topbar-user{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9);font-size:0.85rem;}
-.topbar-avatar{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;color:#fff;}
-.topbar-team{color:rgba(255,255,255,0.55);font-size:0.75rem;}
-.topbar-logout{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:7px;padding:5px 12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:background 0.2s;}
-.topbar-logout:hover{background:rgba(255,255,255,0.25);}
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));display:flex;align-items:center;padding:0 16px;z-index:100;box-shadow:0 2px 10px rgba(90,15,18,0.3);}
+.topbar-logo{display:flex;align-items:center;gap:8px;}
+.topbar-logo h2{font-family:'Lora',serif;font-size:1.15rem;color:#fff;}
+.topbar-logo .chip{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.95);font-size:0.62rem;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:0.07em;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.t-avatar{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;color:#fff;flex-shrink:0;}
+.t-name{color:rgba(255,255,255,0.9);font-size:0.84rem;}
+.t-team{color:rgba(255,255,255,0.5);font-size:0.74rem;}
+.t-logout{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:7px;padding:5px 11px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.76rem;cursor:pointer;}
+.hamburger{display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:7px;padding:6px 8px;cursor:pointer;margin-right:8px;}
 
 /* SIDEBAR */
-.sidebar{position:fixed;left:0;top:56px;bottom:0;width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 12px;z-index:50;transition:transform 0.3s;overflow-y:auto;}
-.sidebar-section{font-size:0.67rem;font-weight:700;color:var(--border2);text-transform:uppercase;letter-spacing:0.1em;padding:10px 13px 5px;}
-.nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:500;font-size:0.87rem;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;}
+.sidebar{position:fixed;left:0;top:var(--topbar-h);bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 10px;z-index:90;overflow-y:auto;transition:transform 0.25s ease;}
+.nav-sec{font-size:0.65rem;font-weight:700;color:var(--border2);text-transform:uppercase;letter-spacing:0.1em;padding:10px 12px 4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:500;font-size:0.86rem;transition:all 0.18s;margin-bottom:2px;border:1px solid transparent;user-select:none;}
 .nav-item:hover{background:var(--surface2);color:var(--text2);}
 .nav-item.active{background:rgba(122,21,24,0.08);color:var(--maroon);border-color:rgba(122,21,24,0.15);font-weight:600;}
-.nav-item svg{width:17px;height:17px;flex-shrink:0;}
-.nav-divider{height:1px;background:var(--border);margin:8px 4px;}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;}
+.nav-div{height:1px;background:var(--border);margin:7px 4px;}
 
 /* MAIN */
-.main{margin-left:220px;padding-top:56px;min-height:100vh;}
-.main-inner{padding:26px 26px 32px;}
-.page{display:none;animation:fadeIn 0.25s ease;}
+.main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);min-height:100vh;}
+.main-inner{padding:22px 22px 32px;}
+.page{display:none;animation:fadeIn 0.22s ease;}
 .page.active{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
-.page-title{font-family:'Lora',serif;font-size:1.6rem;color:var(--maroon-dark);margin-bottom:2px;}
-.page-sub{color:var(--muted);font-size:0.86rem;margin-bottom:20px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+.page-title{font-family:'Lora',serif;font-size:1.5rem;color:var(--maroon-dark);margin-bottom:2px;}
+.page-sub{color:var(--muted);font-size:0.84rem;margin-bottom:18px;}
 
 /* CLOCK CARD */
-.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:18px;}
-.clock-card-label{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;}
-.clock-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-.clock-left{display:flex;align-items:center;gap:28px;}
+.clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px;}
+.clock-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;}
+.clock-body{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.clock-times{display:flex;align-items:center;gap:20px;}
 .clock-block{text-align:center;}
-.clock-time-big{font-family:'Lora',serif;font-size:2.2rem;font-weight:700;color:var(--success);line-height:1;letter-spacing:-1px;}
-.clock-time-big.inactive{color:#D5C9BC;}
-.clock-time-big.done{color:var(--maroon);}
-.clock-block-label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:5px;}
-.clock-arrow{font-size:1.4rem;color:var(--border2);margin:0 4px;padding-bottom:16px;}
-.clock-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
-.clock-status-text{font-size:0.82rem;font-weight:600;color:var(--success);}
-.clock-status-text.inactive{color:var(--muted);font-weight:400;}
-.clock-actions{display:flex;gap:10px;}
-.btn-clock{padding:10px 22px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:7px;}
-.btn-clock-in{background:linear-gradient(135deg,#2D7A3A,#22653A);color:#fff;box-shadow:0 2px 8px rgba(45,122,58,0.25);}
-.btn-clock-out{background:linear-gradient(135deg,#C0392B,#A93226);color:#fff;box-shadow:0 2px 8px rgba(192,57,43,0.25);}
-.btn-clock:hover{transform:translateY(-1px);filter:brightness(1.06);}
-.btn-clock:disabled{opacity:0.35;cursor:not-allowed;transform:none;filter:none;}
-.btn-sq{width:10px;height:10px;background:rgba(255,255,255,0.7);display:inline-block;border-radius:2px;}
-.btn-dot{width:10px;height:10px;background:rgba(255,255,255,0.7);display:inline-block;border-radius:50%;}
+.clock-val{font-family:'Lora',serif;font-size:2rem;font-weight:700;color:var(--success);line-height:1;letter-spacing:-0.5px;}
+.clock-val.inactive{color:#D5C9BC;}
+.clock-val.done{color:var(--maroon);}
+.clock-block-lbl{font-size:0.66rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px;}
+.clock-arrow{font-size:1.2rem;color:var(--border2);padding-bottom:14px;}
+.clock-actions-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.clock-btns{display:flex;gap:8px;}
+.btn-ci{padding:10px 20px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#2D7A3A,#1F5C2A);color:#fff;box-shadow:0 2px 8px rgba(45,122,58,0.2);transition:filter 0.2s,transform 0.1s;-webkit-appearance:none;}
+.btn-co{padding:10px 20px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#C0392B,#9B2F22);color:#fff;box-shadow:0 2px 8px rgba(192,57,43,0.2);transition:filter 0.2s,transform 0.1s;-webkit-appearance:none;}
+.btn-ci:active,.btn-co:active{transform:scale(0.97);}
+.btn-ci:disabled,.btn-co:disabled{opacity:0.38;cursor:not-allowed;transform:none;filter:none;}
+.dot-ic{width:9px;height:9px;background:rgba(255,255,255,0.7);border-radius:50%;display:inline-block;flex-shrink:0;}
+.sq-ic{width:9px;height:9px;background:rgba(255,255,255,0.7);border-radius:2px;display:inline-block;flex-shrink:0;}
+.clock-status{font-size:0.8rem;font-weight:600;color:var(--success);}
+.clock-status.inactive{color:var(--muted);font-weight:400;}
 
-/* STAT CARDS */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:16px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
-.stat-card.c-maroon{border-top:3px solid var(--maroon);}
-.stat-card.c-gold{border-top:3px solid var(--gold);}
-.stat-card.c-green{border-top:3px solid var(--success);}
-.stat-card.c-danger{border-top:3px solid var(--danger);}
-.stat-label-top{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
-.stat-value{font-family:'Lora',serif;font-size:2rem;font-weight:700;line-height:1;}
-.stat-value.maroon{color:var(--maroon);}
-.stat-value.gold{color:var(--gold);}
-.stat-value.green{color:var(--success);}
-.stat-value.red{color:var(--danger);}
-.stat-sub{font-size:0.75rem;color:var(--muted);margin-top:5px;}
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);}
+.stat-card.c1{border-top:3px solid var(--maroon);}
+.stat-card.c2{border-top:3px solid var(--gold);}
+.stat-card.c3{border-top:3px solid var(--success);}
+.stat-card.c4{border-top:3px solid var(--danger);}
+.stat-lbl{font-size:0.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.stat-val{font-family:'Lora',serif;font-size:1.8rem;font-weight:700;line-height:1;}
+.stat-val.v1{color:var(--maroon);}
+.stat-val.v2{color:var(--gold);}
+.stat-val.v3{color:var(--success);}
+.stat-val.v4{color:var(--danger);}
+.stat-sub{font-size:0.72rem;color:var(--muted);margin-top:4px;}
 
 /* POLICY BANNER */
-.policy-banner{background:#EAF4EC;border:1px solid #BFD9C3;border-radius:10px;padding:12px 18px;font-size:0.85rem;color:#2D5A35;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.policy{background:#EBF4EC;border:1px solid #BDD5C0;border-radius:9px;padding:11px 16px;font-size:0.83rem;color:#2D5A35;margin-bottom:16px;display:flex;align-items:center;gap:7px;}
 
-/* CARD & TABLE */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px;}
-.card-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface2);}
-.card-header h3{font-size:0.9rem;font-weight:600;color:var(--text2);}
-.table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;}
-th{padding:10px 16px;text-align:left;font-size:0.7rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.06em;background:var(--maroon-dark);}
-td{padding:12px 16px;font-size:0.85rem;border-bottom:1px solid var(--border);color:var(--text2);}
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;}
+.card-hdr{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface2);}
+.card-hdr h3{font-size:0.88rem;font-weight:600;color:var(--text2);}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;min-width:360px;}
+th{padding:9px 14px;text-align:left;font-size:0.68rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.05em;background:var(--maroon-dark);}
+td{padding:11px 14px;font-size:0.84rem;border-bottom:1px solid var(--border);color:var(--text2);}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:rgba(122,21,24,0.02);}
-.empty-state{text-align:center;padding:38px;color:var(--muted);font-size:0.86rem;}
+.empty{text-align:center;padding:32px;color:var(--muted);font-size:0.85rem;}
 
 /* BADGES */
-.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:0.74rem;font-weight:600;}
-.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.badge-pending{background:var(--warning-bg);color:var(--warning);}
-.badge-approved{background:var(--success-bg);color:var(--success);}
-.badge-rejected{background:var(--danger-bg);color:var(--danger);}
-.badge-complete{background:rgba(26,43,92,0.08);color:var(--navy);}
-.badge-in{background:var(--success-bg);color:var(--success);}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:0.72rem;font-weight:600;}
+.badge .d{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.b-pending{background:var(--warning-bg);color:var(--warning);}
+.b-approved{background:var(--success-bg);color:var(--success);}
+.b-rejected{background:var(--danger-bg);color:var(--danger);}
+.b-complete{background:rgba(26,43,92,0.08);color:var(--navy);}
+.b-active{background:var(--success-bg);color:var(--success);}
 
 /* FORM CARD */
-.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:480px;box-shadow:var(--shadow);}
-.form-card h3{font-family:'Lora',serif;font-size:1.05rem;color:var(--maroon-dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
-.btn-submit{background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:11px 26px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
-.btn-submit:hover{opacity:0.9;}
-.btn-sm{background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:0.79rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;max-width:460px;box-shadow:var(--shadow);}
+.form-card h3{font-family:'Lora',serif;font-size:1rem;color:var(--maroon-dark);margin-bottom:14px;padding-bottom:11px;border-bottom:1px solid var(--border);}
+.btn-submit{background:linear-gradient(135deg,var(--maroon),var(--maroon-light));border:none;border-radius:9px;padding:11px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;-webkit-appearance:none;}
+.btn-sm{background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:0.78rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none;}
 .btn-sm:hover{border-color:var(--maroon);color:var(--maroon);}
-.filter-input{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.8rem;}
-.filter-input:focus{outline:none;border-color:var(--maroon);}
-.form-error{color:var(--danger);font-size:0.82rem;margin-top:10px;display:none;}
+.f-input{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.79rem;-webkit-appearance:none;}
+.f-err{color:var(--danger);font-size:0.8rem;margin-top:9px;display:none;}
 
 /* CALENDAR */
-.cal-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
-.cal-toolbar h3{font-family:'Lora',serif;font-size:1.1rem;color:var(--maroon-dark);min-width:170px;text-align:center;}
-.cal-btn{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 14px;color:var(--text2);cursor:pointer;font-size:0.82rem;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.cal-bar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.cal-bar h3{font-family:'Lora',serif;font-size:1rem;color:var(--maroon-dark);min-width:160px;text-align:center;}
+.cal-btn{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:6px 13px;color:var(--text2);cursor:pointer;font-size:0.8rem;font-family:'DM Sans',sans-serif;-webkit-appearance:none;}
 .cal-btn:hover{border-color:var(--maroon);color:var(--maroon);}
-.cal-day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
-.cal-day-name{text-align:center;padding:8px 2px;font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;}
-.cal-cell-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px;}
-.cal-cell{min-height:64px;background:var(--surface2);border-radius:8px;padding:6px;border:1px solid var(--border);transition:border-color 0.15s;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:3px;}
+.cal-dn{text-align:center;padding:7px 2px;font-size:0.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px;}
+.cal-cell{min-height:60px;background:var(--surface2);border-radius:7px;padding:5px;border:1px solid var(--border);}
 .cal-cell.today{border-color:var(--maroon);background:rgba(122,21,24,0.04);}
-.cal-cell.today .cal-num{color:var(--maroon);font-weight:700;}
-.cal-cell.other-month .cal-num{color:var(--border);}
-.cal-cell.has-approved{background:var(--success-bg);border-color:#BFD9C3;}
-.cal-cell.has-pending{background:var(--warning-bg);border-color:#E8D5A3;}
-.cal-num{font-weight:600;font-size:0.79rem;margin-bottom:3px;color:var(--text2);}
-.cal-event{font-size:0.62rem;padding:2px 4px;border-radius:3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cal-event.approved{background:var(--success-bg);color:var(--success);}
-.cal-event.pending{background:var(--warning-bg);color:var(--warning);}
-.cal-event.rejected{background:var(--danger-bg);color:var(--danger);}
-.cal-legend{display:flex;gap:16px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border);}
-.cal-legend-item{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);}
-.cal-legend-dot{width:10px;height:10px;border-radius:3px;}
+.cal-cell.today .cn{color:var(--maroon);font-weight:700;}
+.cal-cell.om .cn{color:var(--border);}
+.cal-cell.a-leave{background:var(--success-bg);border-color:#BFD9C3;}
+.cal-cell.p-leave{background:var(--warning-bg);border-color:#E8D5A3;}
+.cn{font-weight:600;font-size:0.77rem;margin-bottom:3px;color:var(--text2);}
+.ce{font-size:0.61rem;padding:2px 4px;border-radius:3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ce.approved{background:var(--success-bg);color:var(--success);}
+.ce.pending{background:var(--warning-bg);color:var(--warning);}
+.ce.rejected{background:var(--danger-bg);color:var(--danger);}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;padding-top:9px;border-top:1px solid var(--border);}
+.cl-item{display:flex;align-items:center;gap:5px;font-size:0.76rem;color:var(--muted);}
+.cl-dot{width:9px;height:9px;border-radius:3px;}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:89;display:none;}
+.overlay.show{display:block;}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 18px;font-size:0.85rem;box-shadow:var(--shadow-md);z-index:9999;display:flex;align-items:center;gap:9px;transform:translateY(80px);opacity:0;transition:all 0.3s;color:var(--text2);}
+.toast{position:fixed;bottom:20px;right:20px;left:20px;max-width:380px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.84rem;box-shadow:var(--shadow-md);z-index:9999;display:flex;align-items:center;gap:8px;transform:translateY(100px);opacity:0;transition:all 0.3s;color:var(--text2);}
 .toast.show{transform:none;opacity:1;}
 .toast.success{border-left:3px solid var(--success);}
 .toast.error{border-left:3px solid var(--danger);}
 
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:49;display:none;}
-.overlay.show{display:block;}
+/* ── RESPONSIVE ── */
 
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%);}
-  .sidebar.open{transform:none;}
-  .main{margin-left:0;}
-  .main-inner{padding:16px 14px 28px;}
-  .clock-inner{flex-direction:column;align-items:flex-start;}
-  .clock-right{align-items:flex-start;}
-  .topbar-team{display:none;}
+/* TABLET (iPad) */
+@media(max-width:1024px){
+  :root{--sidebar-w:200px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .clock-body{gap:12px;}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  :root{--sidebar-w:220px;}
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:none;box-shadow:4px 0 20px rgba(0,0,0,0.15);}
+  .main{margin-left:0;}
+  .main-inner{padding:14px 12px 28px;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .t-team{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .clock-body{flex-direction:column;align-items:flex-start;}
+  .clock-actions-wrap{align-items:flex-start;width:100%;}
+  .clock-btns{width:100%;}
+  .btn-ci,.btn-co{flex:1;justify-content:center;}
+  .clock-val{font-size:1.7rem;}
+  .page-title{font-size:1.3rem;}
+  .form-card{max-width:100%;}
+  table{min-width:300px;}
+  th,td{padding:9px 10px;font-size:0.8rem;}
+  .toast{left:12px;right:12px;bottom:16px;}
+}
+
+/* SMALL MOBILE */
+@media(max-width:380px){
+  .topbar-logo h2{font-size:1rem;}
+  .t-name{font-size:0.78rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-val{font-size:1.5rem;}
 }
 </style>
 </head>
@@ -194,12 +224,12 @@ tr:hover td{background:rgba(122,21,24,0.02);}
       <p>Swargaseema Employee Portal</p>
     </div>
     <div class="login-body">
-      <div class="first-login-note" id="firstLoginNote">👋 Welcome! First login — please set your password below.</div>
-      <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter your username"/></div>
-      <div class="form-group"><label id="passwordLabel">Password</label><input type="password" id="loginPassword" placeholder="Enter your password" onkeydown="if(event.key==='Enter')handleLogin()"/></div>
-      <div class="form-group" id="confirmGroup" style="display:none;"><label>Confirm Password</label><input type="password" id="loginConfirm" placeholder="Re-enter your password"/></div>
-      <button class="btn-primary" onclick="handleLogin()"><span id="loginBtnText">Sign In</span></button>
-      <div class="login-error" id="loginError"></div>
+      <div class="first-note" id="firstNote">👋 Welcome! First login — please set your password.</div>
+      <div class="fg"><label>Username</label><input type="text" id="liU" placeholder="Enter your username" autocomplete="username"/></div>
+      <div class="fg"><label id="liPL">Password</label><input type="password" id="liP" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="fg" id="liCG" style="display:none;"><label>Confirm Password</label><input type="password" id="liC" placeholder="Re-enter new password"/></div>
+      <button class="btn-primary" onclick="doLogin()"><span id="liBT">Sign In</span></button>
+      <div class="login-error" id="liErr"></div>
     </div>
   </div>
 </div>
@@ -208,112 +238,94 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 
 <!-- APP -->
 <div id="app">
+  <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-logo"><h2>AttendFlow</h2><span>EMPLOYEE</span></div>
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+      <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <div class="topbar-logo"><h2>AttendFlow</h2><span class="chip">EMPLOYEE</span></div>
     <div class="topbar-right">
-      <div class="topbar-user">
-        <div class="topbar-avatar" id="userAvatar">?</div>
-        <span id="userName">—</span>
-        <span class="topbar-team" id="userTeam">—</span>
-      </div>
-      <button class="topbar-logout" onclick="logout()">Sign Out</button>
+      <div class="t-avatar" id="tAvatar">?</div>
+      <span class="t-name" id="tName">—</span>
+      <span class="t-team" id="tTeam">—</span>
+      <button class="t-logout" onclick="doLogout()">Sign Out</button>
     </div>
   </div>
 
+  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-section">My Portal</div>
-    <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard',this)">
+    <div class="nav-sec">My Portal</div>
+    <div class="nav-item active" id="n-dashboard" onclick="showPage('dashboard',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard
     </div>
-    <div class="nav-item" id="nav-attendance" onclick="showPage('attendance',this)">
+    <div class="nav-item" id="n-attendance" onclick="showPage('attendance',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>Attendance Log
     </div>
-    <div class="nav-divider"></div>
-    <div class="sidebar-section">Leave</div>
-    <div class="nav-item" id="nav-leaves" onclick="showPage('leaves',this)">
+    <div class="nav-div"></div>
+    <div class="nav-sec">Leave</div>
+    <div class="nav-item" id="n-leaves" onclick="showPage('leaves',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Request Leave
     </div>
-    <div class="nav-item" id="nav-myLeaves" onclick="showPage('myLeaves',this)">
+    <div class="nav-item" id="n-myLeaves" onclick="showPage('myLeaves',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>My Leaves
     </div>
-    <div class="nav-item" id="nav-calendar" onclick="showPage('calendar',this)">
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/></svg>Calendar
+    <div class="nav-item" id="n-calendar" onclick="showPage('calendar',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>Calendar
     </div>
-    <div class="nav-divider"></div>
-    <div class="sidebar-section">Account</div>
-    <div class="nav-item" id="nav-changePassword" onclick="showPage('changePassword',this)">
+    <div class="nav-div"></div>
+    <div class="nav-sec">Account</div>
+    <div class="nav-item" id="n-changePassword" onclick="showPage('changePassword',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Change Password
     </div>
   </div>
 
+  <!-- MAIN -->
   <div class="main">
     <div class="main-inner">
 
       <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
         <div class="page-title">Welcome, <span id="greetName">—</span> 👋</div>
-        <div class="page-sub">Your daily overview — <span id="liveDate">—</span> &nbsp;·&nbsp; <span id="liveClock" style="font-weight:600;color:var(--maroon);">00:00:00</span></div>
+        <div class="page-sub" id="greetSub">Loading...</div>
 
-        <!-- CLOCK CARD -->
         <div class="clock-card">
-          <div class="clock-card-label">Today's Attendance</div>
-          <div class="clock-inner">
-            <div class="clock-left">
+          <div class="clock-label">Today's Attendance</div>
+          <div class="clock-body">
+            <div class="clock-times">
               <div class="clock-block">
-                <div class="clock-time-big inactive" id="clockInDisplay">--:--</div>
-                <div class="clock-block-label">Clock In</div>
+                <div class="clock-val inactive" id="ciDisp">--:--</div>
+                <div class="clock-block-lbl">Clock In</div>
               </div>
               <div class="clock-arrow">→</div>
               <div class="clock-block">
-                <div class="clock-time-big inactive" id="clockOutDisplay">--:--</div>
-                <div class="clock-block-label">Clock Out</div>
+                <div class="clock-val inactive" id="coDisp">--:--</div>
+                <div class="clock-block-lbl">Clock Out</div>
               </div>
             </div>
-            <div class="clock-right">
-              <div class="clock-actions">
-                <button class="btn-clock btn-clock-in" id="btnClockIn" onclick="clockIn()"><span class="btn-dot"></span> Clock In</button>
-                <button class="btn-clock btn-clock-out" id="btnClockOut" onclick="clockOut()" disabled><span class="btn-sq"></span> Clock Out</button>
+            <div class="clock-actions-wrap">
+              <div class="clock-btns">
+                <button class="btn-ci" id="btnCI" onclick="doClockin()"><span class="dot-ic"></span>Clock In</button>
+                <button class="btn-co" id="btnCO" onclick="doClockout()" disabled><span class="sq-ic"></span>Clock Out</button>
               </div>
-              <div class="clock-status-text inactive" id="clockStatusText">Not clocked in</div>
+              <div class="clock-status inactive" id="clockSt">Not clocked in</div>
             </div>
           </div>
         </div>
 
-        <!-- STAT CARDS -->
         <div class="stats-grid">
-          <div class="stat-card c-maroon">
-            <div class="stat-label-top">Week-offs Left</div>
-            <div class="stat-value maroon" id="statWeekOffsLeft">—</div>
-            <div class="stat-sub" id="statWeekOffSub">of — total</div>
-          </div>
-          <div class="stat-card c-gold">
-            <div class="stat-label-top">Pending</div>
-            <div class="stat-value gold" id="statPending">0</div>
-            <div class="stat-sub">awaiting approval</div>
-          </div>
-          <div class="stat-card c-green">
-            <div class="stat-label-top">Approved</div>
-            <div class="stat-value green" id="statApproved">0</div>
-            <div class="stat-sub">confirmed</div>
-          </div>
-          <div class="stat-card c-danger">
-            <div class="stat-label-top">Denied</div>
-            <div class="stat-value red" id="statDenied">0</div>
-            <div class="stat-sub">not approved</div>
-          </div>
+          <div class="stat-card c1"><div class="stat-lbl">Week-offs Left</div><div class="stat-val v1" id="sWkLeft">4</div><div class="stat-sub" id="sWkSub">of 4 total</div></div>
+          <div class="stat-card c2"><div class="stat-lbl">Pending</div><div class="stat-val v2" id="sPend">0</div><div class="stat-sub">awaiting approval</div></div>
+          <div class="stat-card c3"><div class="stat-lbl">Approved</div><div class="stat-val v3" id="sAppr">0</div><div class="stat-sub">confirmed</div></div>
+          <div class="stat-card c4"><div class="stat-lbl">Denied</div><div class="stat-val v4" id="sDeni">0</div><div class="stat-sub">not approved</div></div>
         </div>
 
-        <!-- POLICY BANNER -->
-        <div class="policy-banner">
-          📋 <strong>Policy:</strong> Week-off quota is set monthly by the admin. All leaves require approval.
-        </div>
+        <div class="policy">📋 <strong>Policy:</strong> Week-off quota is set monthly by the admin. All leaves require approval.</div>
 
-        <!-- RECENT REQUESTS -->
         <div class="card">
-          <div class="card-header"><h3>Recent Requests</h3><button class="btn-sm" onclick="loadDashboard()">↻ Refresh</button></div>
-          <div class="table-wrap"><table>
+          <div class="card-hdr"><h3>Recent Requests</h3><button class="btn-sm" onclick="loadDashboard()">↻ Refresh</button></div>
+          <div class="tw"><table>
             <thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Applied On</th></tr></thead>
-            <tbody id="recentRequestsBody"><tr><td colspan="4" class="empty-state">Loading...</td></tr></tbody>
+            <tbody id="reqTbody"></tbody>
           </table></div>
         </div>
       </div>
@@ -323,13 +335,10 @@ tr:hover td{background:rgba(122,21,24,0.02);}
         <div class="page-title">Attendance Log</div>
         <div class="page-sub">Your complete daily attendance history.</div>
         <div class="card">
-          <div class="card-header">
-            <h3>All Records</h3>
-            <input type="month" id="attFilter" onchange="filterAttendance()" class="filter-input"/>
-          </div>
-          <div class="table-wrap"><table>
-            <thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Hours Worked</th><th>Status</th></tr></thead>
-            <tbody id="attBody"><tr><td colspan="5" class="empty-state">Loading...</td></tr></tbody>
+          <div class="card-hdr"><h3>All Records</h3><input type="month" id="attMon" onchange="filterAtt()" class="f-input"/></div>
+          <div class="tw"><table>
+            <thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Duration</th><th>Status</th></tr></thead>
+            <tbody id="attTbody"></tbody>
           </table></div>
         </div>
       </div>
@@ -340,16 +349,16 @@ tr:hover td{background:rgba(122,21,24,0.02);}
         <div class="page-sub">Submit a weekly off or leave request for admin approval.</div>
         <div class="form-card">
           <h3>New Leave Request</h3>
-          <div class="form-group"><label>Leave Type</label>
-            <select id="leaveType">
+          <div class="fg"><label>Leave Type</label>
+            <select id="lvType">
               <option value="Weekly Off">Weekly Off</option>
               <option value="Sick Leave">Sick Leave</option>
               <option value="Personal Leave">Personal Leave</option>
               <option value="Emergency Leave">Emergency Leave</option>
             </select>
           </div>
-          <div class="form-group"><label>Date</label><input type="date" id="leaveDate"/></div>
-          <div class="form-group"><label>Reason (optional)</label><textarea id="leaveReason" placeholder="Briefly describe your reason..."></textarea></div>
+          <div class="fg"><label>Date</label><input type="date" id="lvDate"/></div>
+          <div class="fg"><label>Reason (optional)</label><textarea id="lvReason" placeholder="Briefly describe your reason..."></textarea></div>
           <button class="btn-submit" onclick="submitLeave()">Submit Request</button>
         </div>
       </div>
@@ -359,10 +368,10 @@ tr:hover td{background:rgba(122,21,24,0.02);}
         <div class="page-title">My Leaves</div>
         <div class="page-sub">Track the status of all your submitted requests.</div>
         <div class="card">
-          <div class="card-header"><h3>All Requests</h3><button class="btn-sm" onclick="loadMyLeaves()">↻ Refresh</button></div>
-          <div class="table-wrap"><table>
+          <div class="card-hdr"><h3>All Requests</h3><button class="btn-sm" onclick="loadMyLeaves()">↻ Refresh</button></div>
+          <div class="tw"><table>
             <thead><tr><th>Date</th><th>Type</th><th>Reason</th><th>Applied On</th><th>Status</th></tr></thead>
-            <tbody id="myLeavesBody"><tr><td colspan="5" class="empty-state">No requests yet</td></tr></tbody>
+            <tbody id="lvTbody"></tbody>
           </table></div>
         </div>
       </div>
@@ -370,19 +379,19 @@ tr:hover td{background:rgba(122,21,24,0.02);}
       <!-- CALENDAR -->
       <div class="page" id="page-calendar">
         <div class="page-title">My Calendar</div>
-        <div class="page-sub">View your leave dates on a monthly calendar.</div>
-        <div class="card" style="padding:22px;">
-          <div class="cal-toolbar">
+        <div class="page-sub">Your leave dates on a monthly calendar.</div>
+        <div class="card" style="padding:18px;">
+          <div class="cal-bar">
             <button class="cal-btn" onclick="calPrev()">← Prev</button>
             <h3 id="calTitle">—</h3>
             <button class="cal-btn" onclick="calNext()">Next →</button>
           </div>
-          <div class="cal-day-grid" id="calDayNames"></div>
-          <div class="cal-cell-grid" id="calGrid"></div>
+          <div class="cal-days" id="calDayNames"></div>
+          <div class="cal-grid" id="calGrid"></div>
           <div class="cal-legend">
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--success-bg);border:1px solid #BFD9C3"></div>Approved</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--warning-bg);border:1px solid #E8D5A3"></div>Pending</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--danger-bg);border:1px solid #F5C6C0"></div>Rejected</div>
+            <div class="cl-item"><div class="cl-dot" style="background:var(--success-bg);border:1px solid #BFD9C3;"></div>Approved</div>
+            <div class="cl-item"><div class="cl-dot" style="background:var(--warning-bg);border:1px solid #E8D5A3;"></div>Pending</div>
+            <div class="cl-item"><div class="cl-dot" style="background:var(--danger-bg);border:1px solid #F5C6C0;"></div>Rejected</div>
           </div>
         </div>
       </div>
@@ -391,13 +400,13 @@ tr:hover td{background:rgba(122,21,24,0.02);}
       <div class="page" id="page-changePassword">
         <div class="page-title">Change Password</div>
         <div class="page-sub">Update your login password anytime.</div>
-        <div class="form-card" style="max-width:420px;">
+        <div class="form-card" style="max-width:400px;">
           <h3>Update Password</h3>
-          <div class="form-group"><label>Current Password</label><input type="password" id="oldPassword" placeholder="Enter your current password"/></div>
-          <div class="form-group"><label>New Password</label><input type="password" id="newPassword" placeholder="Minimum 6 characters"/></div>
-          <div class="form-group"><label>Confirm New Password</label><input type="password" id="confirmNewPassword" placeholder="Re-enter new password"/></div>
-          <button class="btn-submit" onclick="submitChangePassword()">Update Password</button>
-          <div class="form-error" id="cpError"></div>
+          <div class="fg"><label>Current Password</label><input type="password" id="cpOld" placeholder="Enter current password"/></div>
+          <div class="fg"><label>New Password</label><input type="password" id="cpNew" placeholder="Minimum 6 characters"/></div>
+          <div class="fg"><label>Confirm New Password</label><input type="password" id="cpConf" placeholder="Re-enter new password"/></div>
+          <button class="btn-submit" onclick="submitCP()">Update Password</button>
+          <div class="f-err" id="cpErr"></div>
         </div>
       </div>
 
@@ -408,394 +417,351 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzFDjgpt5S-fruEBflRHzVlbQqp-ADZ5_NoOk7YdRVlh5oRG8-oiL434JdtRAs032nn5g/exec";
+// ── CONFIG ───────────────────────────────────────────────────
+const API = "https://script.google.com/macros/s/AKfycbzFDjgpt5S-fruEBflRHzVlbQqp-ADZ5_NoOk7YdRVlh5oRG8-oiL434JdtRAs032nn5g/exec";
 
-let user = null;
-let isFirstLogin = false;
-let allAttendance = [];
-let myLeaveRecords = [];
-let weekOffQuota = 4;
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
+// ── STATE ────────────────────────────────────────────────────
+var user = null;
+var firstLogin = false;
+var allAtt = [];
+var myLeaves = [];
+var quota = 4;
+var calY = new Date().getFullYear();
+var calM = new Date().getMonth();
+var busy = false;
 
-// ── INIT ────────────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────────
 window.addEventListener('load', function() {
-  try { var s = localStorage.getItem('af_user'); if(s) user = JSON.parse(s); } catch(e){}
-  if (user && user.employeeID) { initApp(); }
-  else { document.getElementById('loginScreen').style.display = 'flex'; }
+  try { var s = localStorage.getItem('af_u'); if(s) user = JSON.parse(s); } catch(e){}
+  if (user && user.id) {
+    startApp();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
   startClock();
 });
 
 function startClock() {
   function tick() {
     var n = new Date();
-    var el = document.getElementById('liveClock'), dl = document.getElementById('liveDate');
-    if(el) el.textContent = n.toLocaleTimeString('en-IN',{hour12:false});
-    if(dl) dl.textContent = n.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    var sub = document.getElementById('greetSub');
+    if (sub) sub.textContent = 'Your daily overview — ' + n.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' · ' + n.toLocaleTimeString('en-IN',{hour12:false});
   }
   tick(); setInterval(tick, 1000);
 }
 
-// ── LOGIN ────────────────────────────────────────────────────
-async function handleLogin() {
-  var username = document.getElementById('loginUsername').value.trim();
-  var password = document.getElementById('loginPassword').value;
-  var confirm  = document.getElementById('loginConfirm').value;
-  document.getElementById('loginError').style.display = 'none';
-  if (!username) { showLoginErr('Please enter your username.'); return; }
+// ── LOGIN ─────────────────────────────────────────────────────
+async function doLogin() {
+  var u = document.getElementById('liU').value.trim();
+  var p = document.getElementById('liP').value;
+  var c = document.getElementById('liC').value;
+  document.getElementById('liErr').style.display = 'none';
+  if (!u) { loginErr('Please enter your username.'); return; }
 
-  if (isFirstLogin) {
-    if (!password) { showLoginErr('Please set a password.'); return; }
-    if (password.length < 6) { showLoginErr('Minimum 6 characters required.'); return; }
-    if (password !== confirm) { showLoginErr('Passwords do not match.'); return; }
-    var r = await api({action:'setPassword', username:username, password:password, employeeID:user.employeeID});
-    if (r.success) {
-      user = {employeeID:r.employeeID, name:r.name, team:r.team, role:r.role};
-      localStorage.setItem('af_user', JSON.stringify(user));
-      initApp();
-    } else showLoginErr(r.message);
+  if (firstLogin) {
+    if (!p) { loginErr('Please set a password.'); return; }
+    if (p.length < 6) { loginErr('Minimum 6 characters.'); return; }
+    if (p !== c) { loginErr('Passwords do not match.'); return; }
+    var r = await call({action:'setPassword', username:u, password:p, employeeID:user.id});
+    if (r.success) { user = {id:r.employeeID, name:r.name, team:r.team, role:r.role}; localStorage.setItem('af_u',JSON.stringify(user)); startApp(); }
+    else loginErr(r.message);
     return;
   }
 
-  var res = await api({action:'login', username:username, password:password||'__check__'});
-  if (res.success && res.firstLogin) {
-    isFirstLogin = true; user = {employeeID:res.employeeID};
-    document.getElementById('firstLoginNote').style.display = 'block';
-    document.getElementById('passwordLabel').textContent = 'Set New Password';
-    document.getElementById('confirmGroup').style.display = 'block';
-    document.getElementById('loginBtnText').textContent = 'Set Password & Sign In';
-  } else if (res.success && !res.firstLogin) {
-    if (res.role === 'admin') { showLoginErr('Please use the Admin Portal.'); return; }
-    user = {employeeID:res.employeeID, name:res.name, team:res.team, role:res.role};
-    localStorage.setItem('af_user', JSON.stringify(user));
-    initApp();
-  } else showLoginErr(res.message || 'Login failed.');
+  var r = await call({action:'login', username:u, password:p||'__chk__'});
+  if (r.success && r.firstLogin) {
+    firstLogin = true; user = {id:r.employeeID};
+    document.getElementById('firstNote').style.display = 'block';
+    document.getElementById('liPL').textContent = 'Set New Password';
+    document.getElementById('liCG').style.display = 'block';
+    document.getElementById('liBT').textContent = 'Set Password & Sign In';
+  } else if (r.success) {
+    if (r.role === 'admin') { loginErr('Please use the Admin Portal.'); return; }
+    user = {id:r.employeeID, name:r.name, team:r.team, role:r.role};
+    localStorage.setItem('af_u', JSON.stringify(user));
+    startApp();
+  } else loginErr(r.message || 'Login failed.');
 }
-function showLoginErr(m){ var e=document.getElementById('loginError'); e.textContent=m; e.style.display='block'; }
+function loginErr(m) { var e=document.getElementById('liErr'); e.textContent=m; e.style.display='block'; }
 
-// ── APP INIT ─────────────────────────────────────────────────
-async function initApp() {
+// ── APP START ─────────────────────────────────────────────────
+async function startApp() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('userName').textContent = user.name || '—';
-  document.getElementById('userTeam').textContent = user.team || '—';
-  document.getElementById('userAvatar').textContent = (user.name||'?')[0].toUpperCase();
+  document.getElementById('tAvatar').textContent = (user.name||'?')[0].toUpperCase();
+  document.getElementById('tName').textContent   = user.name || '—';
+  document.getElementById('tTeam').textContent   = user.team || '—';
   document.getElementById('greetName').textContent = (user.name||'').split(' ')[0] || '—';
+  // Set default leave date to tomorrow
   var t = new Date(); t.setDate(t.getDate()+1);
-  var ty = t.getFullYear(), tm = String(t.getMonth()+1).padStart(2,'0'), td = String(t.getDate()).padStart(2,'0');
-  document.getElementById('leaveDate').value = ty+'-'+tm+'-'+td;
+  document.getElementById('lvDate').value = fmtDateInput(t);
   await loadDashboard();
 }
 
-// ── DASHBOARD ────────────────────────────────────────────────
+// ── DASHBOARD ─────────────────────────────────────────────────
 async function loadDashboard() {
-  // Call each API separately so one failure doesn't break others
-  var sR = await api({action:'todayStatus',    employeeID:user.employeeID});
-  var aR = await api({action:'getAttendance',  employeeID:user.employeeID});
-  var lR = await api({action:'getMyLeaves',    employeeID:user.employeeID});
-  var qR = await api({action:'getWeekOffQuota', employeeID:user.employeeID});
+  // Call APIs one by one — simpler, more reliable
+  var sR = await call({action:'todayStatus',   employeeID:user.id});
+  var aR = await call({action:'getAttendance', employeeID:user.id});
+  var lR = await call({action:'getMyLeaves',   employeeID:user.id});
+  var qR = await call({action:'getWeekOffQuota'});
 
-  allAttendance  = (aR && aR.success && aR.records)  ? aR.records  : [];
-  myLeaveRecords = (lR && lR.success && lR.records)  ? lR.records  : [];
+  // Attendance records
+  allAtt   = (aR && aR.records)  ? aR.records  : [];
+  myLeaves = (lR && lR.records)  ? lR.records  : [];
 
-  // Parse quota safely — default to 4
-  if (qR && qR.success) {
-    weekOffQuota = parseInt(qR.quota) || 4;
-  } else {
-    weekOffQuota = 4;
+  // Quota — default 4 if anything goes wrong
+  quota = 4;
+  if (qR && typeof qR.quota !== 'undefined' && qR.quota !== null) {
+    var q = parseInt(qR.quota);
+    if (!isNaN(q) && q > 0) quota = q;
   }
 
-  // Update clock UI
-  updateClockUI(sR);
+  // Clock UI
+  updateClock(sR);
 
-  // Stats — count this month's week-offs
+  // Stats
   var now = new Date();
-  var ym  = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  var monthLeaves  = myLeaveRecords.filter(function(l){ return l.date && l.date.startsWith(ym); });
-  var weekOffsUsed = monthLeaves.filter(function(l){ return l.type==='Weekly Off' && (l.status==='Approved'||l.status==='Pending'); }).length;
-  var weekOffsLeft = Math.max(0, weekOffQuota - weekOffsUsed);
-  var pending      = myLeaveRecords.filter(function(l){ return l.status==='Pending'; }).length;
-  var approved     = myLeaveRecords.filter(function(l){ return l.status==='Approved'; }).length;
-  var denied       = myLeaveRecords.filter(function(l){ return l.status==='Rejected'; }).length;
+  var ym  = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var thisMonth = myLeaves.filter(function(l){ return l.date && l.date.startsWith(ym); });
+  var wkUsed  = thisMonth.filter(function(l){ return l.type==='Weekly Off' && (l.status==='Approved'||l.status==='Pending'); }).length;
+  var wkLeft  = Math.max(0, quota - wkUsed);
+  var pending = myLeaves.filter(function(l){ return l.status==='Pending'; }).length;
+  var apprvd  = myLeaves.filter(function(l){ return l.status==='Approved'; }).length;
+  var denied  = myLeaves.filter(function(l){ return l.status==='Rejected'; }).length;
 
-  document.getElementById('statWeekOffsLeft').textContent = weekOffsLeft;
-  document.getElementById('statWeekOffSub').textContent   = 'of ' + weekOffQuota + ' total';
-  document.getElementById('statPending').textContent      = pending;
-  document.getElementById('statApproved').textContent     = approved;
-  document.getElementById('statDenied').textContent       = denied;
+  document.getElementById('sWkLeft').textContent = wkLeft;
+  document.getElementById('sWkSub').textContent  = 'of ' + quota + ' total';
+  document.getElementById('sPend').textContent   = pending;
+  document.getElementById('sAppr').textContent   = apprvd;
+  document.getElementById('sDeni').textContent   = denied;
 
-  // Recent requests table
-  var tbody  = document.getElementById('recentRequestsBody');
-  var recent = myLeaveRecords.slice(0, 8);
-  tbody.innerHTML = recent.length ? recent.map(function(r){
-    return '<tr><td>'+formatDate(r.date)+'</td><td>'+r.type+'</td>'
-      +'<td><span class="badge badge-'+r.status.toLowerCase()+'" style="font-size:0.72rem"><span class="dot"></span>'+r.status+'</span></td>'
-      +'<td>'+formatDate(r.requestedOn)+'</td></tr>';
-  }).join('') : '<tr><td colspan="4" class="empty-state">No requests yet</td></tr>';
+  // Recent requests
+  var tb = document.getElementById('reqTbody');
+  tb.innerHTML = myLeaves.length
+    ? myLeaves.slice(0,8).map(function(r){
+        return '<tr><td>'+fmtDate(r.date)+'</td><td>'+r.type+'</td>'
+          +'<td><span class="badge b-'+r.status.toLowerCase()+'"><span class="d"></span>'+r.status+'</span></td>'
+          +'<td>'+fmtDate(r.requestedOn)+'</td></tr>';
+      }).join('')
+    : '<tr><td colspan="4" class="empty">No requests yet</td></tr>';
 
-  // Attendance page
-  renderAttTable(allAttendance);
+  // Also update attendance page
+  renderAtt(allAtt);
 }
 
-function updateClockUI(sR) {
-  var inDisp    = document.getElementById('clockInDisplay');
-  var outDisp   = document.getElementById('clockOutDisplay');
-  var statusTxt = document.getElementById('clockStatusText');
-  var btnIn     = document.getElementById('btnClockIn');
-  var btnOut    = document.getElementById('btnClockOut');
-  if (!sR || !sR.success) return;
-
-  var loginTime  = sR.loginTime  || '';
-  var logoutTime = sR.logoutTime || '';
-
-  // Clean up time values — remove any that are just "0" or empty
-  var hasLogin  = loginTime  !== '' && loginTime  !== '0' && loginTime  !== '00:00:00';
-  var hasLogout = logoutTime !== '' && logoutTime !== '0' && logoutTime !== '00:00:00';
-
-  if (sR.clockedIn && !sR.clockedOut) {
-    inDisp.textContent    = hasLogin ? loginTime.substring(0,5) : '--:--';
-    inDisp.className      = 'clock-time-big';
-    outDisp.textContent   = '--:--';
-    outDisp.className     = 'clock-time-big inactive';
-    statusTxt.textContent = 'Currently clocked in';
-    statusTxt.className   = 'clock-status-text';
-    btnIn.disabled        = true;
-    btnOut.disabled       = false;
-    document.getElementById('statToday').textContent = 'Active';
-  } else if (sR.clockedIn && sR.clockedOut) {
-    inDisp.textContent    = hasLogin  ? loginTime.substring(0,5)  : '--:--';
-    inDisp.className      = 'clock-time-big';
-    outDisp.textContent   = hasLogout ? logoutTime.substring(0,5) : '--:--';
-    outDisp.className     = 'clock-time-big done';
-    statusTxt.textContent = 'Day complete · ' + (sR.duration || '');
-    statusTxt.className   = 'clock-status-text';
-    btnIn.disabled        = true;
-    btnOut.disabled       = true;
-    document.getElementById('statToday').textContent = sR.duration || '—';
+// ── CLOCK UI ─────────────────────────────────────────────────
+function updateClock(s) {
+  var ci = document.getElementById('ciDisp');
+  var co = document.getElementById('coDisp');
+  var st = document.getElementById('clockSt');
+  var bI = document.getElementById('btnCI');
+  var bO = document.getElementById('btnCO');
+  if (!s || !s.success) return;
+  if (s.clockedIn && !s.clockedOut) {
+    ci.textContent = s.loginTime  ? s.loginTime.substring(0,5)  : '--:--'; ci.className = 'clock-val';
+    co.textContent = '--:--'; co.className = 'clock-val inactive';
+    st.textContent = 'Currently clocked in'; st.className = 'clock-status';
+    bI.disabled = true; bO.disabled = false;
+  } else if (s.clockedIn && s.clockedOut) {
+    ci.textContent = s.loginTime  ? s.loginTime.substring(0,5)  : '--:--'; ci.className = 'clock-val';
+    co.textContent = s.logoutTime ? s.logoutTime.substring(0,5) : '--:--'; co.className = 'clock-val done';
+    st.textContent = 'Day complete · ' + (s.duration||''); st.className = 'clock-status';
+    bI.disabled = true; bO.disabled = true;
   } else {
-    inDisp.textContent    = '--:--';
-    inDisp.className      = 'clock-time-big inactive';
-    outDisp.textContent   = '--:--';
-    outDisp.className     = 'clock-time-big inactive';
-    statusTxt.textContent = 'Not clocked in';
-    statusTxt.className   = 'clock-status-text inactive';
-    btnIn.disabled        = false;
-    btnOut.disabled       = true;
-    document.getElementById('statToday').textContent = '—';
+    ci.textContent = '--:--'; ci.className = 'clock-val inactive';
+    co.textContent = '--:--'; co.className = 'clock-val inactive';
+    st.textContent = 'Not clocked in'; st.className = 'clock-status inactive';
+    bI.disabled = false; bO.disabled = true;
   }
 }
 
-// ── CLOCK IN/OUT ─────────────────────────────────────────────
-// ── CLOCK IN/OUT ─────────────────────────────────────────────
-var clockProcessing = false;
-
-async function clockIn() {
-  if (clockProcessing) return;
-  clockProcessing = true;
-
-  var btnIn  = document.getElementById('btnClockIn');
-  var btnOut = document.getElementById('btnClockOut');
-  btnIn.disabled  = true;
-  btnOut.disabled = true;
-  btnIn.innerHTML = '<span class="btn-dot"></span> Please wait...';
-
-  var r = await api({action:'clockIn', employeeID:user.employeeID, name:user.name, team:user.team});
-
+// ── CLOCK IN / OUT ───────────────────────────────────────────
+async function doClockin() {
+  if (busy) return; busy = true;
+  var bI = document.getElementById('btnCI'), bO = document.getElementById('btnCO');
+  bI.disabled = bO.disabled = true;
+  bI.innerHTML = '<span class="dot-ic"></span>Please wait...';
+  var r = await call({action:'clockIn', employeeID:user.id, name:user.name, team:user.team});
   if (r.success) {
     showToast(r.message, 'success');
-    var inDisp    = document.getElementById('clockInDisplay');
-    var outDisp   = document.getElementById('clockOutDisplay');
-    var statusTxt = document.getElementById('clockStatusText');
-
     var t = r.loginTime ? r.loginTime.substring(0,5) : new Date().toLocaleTimeString('en-IN',{hour12:false}).substring(0,5);
-    inDisp.textContent    = t;
-    inDisp.className      = 'clock-time-big';
-    outDisp.textContent   = '--:--';
-    outDisp.className     = 'clock-time-big inactive';
-    statusTxt.textContent = 'Currently clocked in';
-    statusTxt.className   = 'clock-status-text';
-    btnIn.disabled        = true;
-    btnOut.disabled       = false;
-    btnIn.innerHTML       = '<span class="btn-dot"></span> Clock In';
-    document.getElementById('statToday').textContent = 'Active';
+    document.getElementById('ciDisp').textContent = t;
+    document.getElementById('ciDisp').className   = 'clock-val';
+    document.getElementById('coDisp').textContent = '--:--';
+    document.getElementById('coDisp').className   = 'clock-val inactive';
+    document.getElementById('clockSt').textContent = 'Currently clocked in';
+    document.getElementById('clockSt').className  = 'clock-status';
+    bI.disabled = true; bO.disabled = false;
   } else {
     showToast(r.message, 'error');
-    btnIn.disabled  = false;
-    btnOut.disabled = true;
-    btnIn.innerHTML = '<span class="btn-dot"></span> Clock In';
+    bI.disabled = false; bO.disabled = true;
   }
-
-  clockProcessing = false;
+  bI.innerHTML = '<span class="dot-ic"></span>Clock In';
+  busy = false;
 }
 
-async function clockOut() {
-  if (clockProcessing) return;
-  clockProcessing = true;
-
-  var btnIn  = document.getElementById('btnClockIn');
-  var btnOut = document.getElementById('btnClockOut');
-  btnIn.disabled  = true;
-  btnOut.disabled = true;
-  btnOut.innerHTML = '<span class="btn-sq"></span> Please wait...';
-
-  var r = await api({action:'clockOut', employeeID:user.employeeID});
-
+async function doClockout() {
+  if (busy) return; busy = true;
+  var bI = document.getElementById('btnCI'), bO = document.getElementById('btnCO');
+  bI.disabled = bO.disabled = true;
+  bO.innerHTML = '<span class="sq-ic"></span>Please wait...';
+  var r = await call({action:'clockOut', employeeID:user.id});
   if (r.success) {
     showToast(r.message, 'success');
-    var outDisp   = document.getElementById('clockOutDisplay');
-    var statusTxt = document.getElementById('clockStatusText');
-
     var t = r.logoutTime ? r.logoutTime.substring(0,5) : new Date().toLocaleTimeString('en-IN',{hour12:false}).substring(0,5);
-    outDisp.textContent   = t;
-    outDisp.className     = 'clock-time-big done';
-    statusTxt.textContent = 'Day complete · ' + (r.duration || '');
-    statusTxt.className   = 'clock-status-text';
-    btnIn.disabled        = true;
-    btnOut.disabled       = true;
-    btnOut.innerHTML      = '<span class="btn-sq"></span> Clock Out';
-    document.getElementById('statToday').textContent = r.duration || '—';
+    document.getElementById('coDisp').textContent = t;
+    document.getElementById('coDisp').className   = 'clock-val done';
+    document.getElementById('clockSt').textContent = 'Day complete · ' + (r.duration||'');
+    document.getElementById('clockSt').className  = 'clock-status';
+    bI.disabled = true; bO.disabled = true;
   } else {
     showToast(r.message, 'error');
-    btnIn.disabled  = true;
-    btnOut.disabled = false;
-    btnOut.innerHTML = '<span class="btn-sq"></span> Clock Out';
+    bI.disabled = true; bO.disabled = false;
   }
-
-  clockProcessing = false;
+  bO.innerHTML = '<span class="sq-ic"></span>Clock Out';
+  busy = false;
 }
 
 // ── ATTENDANCE ───────────────────────────────────────────────
-function renderAttTable(records) {
-  var tbody=document.getElementById('attBody');
-  if(!records.length){ tbody.innerHTML='<tr><td colspan="5" class="empty-state">No records found</td></tr>'; return; }
-  tbody.innerHTML=records.map(function(r){
-    var done=r.logoutTime&&r.logoutTime!=='';
-    return '<tr><td>'+formatDate(r.date)+'</td><td>'+(r.loginTime||'—')+'</td><td>'+(r.logoutTime||'—')+'</td><td>'+(r.duration||'—')+'</td>'
-      +'<td>'+(done?'<span class="badge badge-complete" style="font-size:0.72rem"><span class="dot"></span>Complete</span>':'<span class="badge badge-in" style="font-size:0.72rem"><span class="dot"></span>Active</span>')+'</td></tr>';
-  }).join('');
+function renderAtt(recs) {
+  var tb = document.getElementById('attTbody');
+  tb.innerHTML = recs.length ? recs.map(function(r){
+    var done = r.logoutTime && r.logoutTime !== '';
+    return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(r.loginTime||'—')+'</td><td>'+(r.logoutTime||'—')+'</td>'
+      +'<td>'+(r.duration||'—')+'</td><td>'
+      +(done?'<span class="badge b-complete"><span class="d"></span>Complete</span>'
+            :'<span class="badge b-active"><span class="d"></span>Active</span>')
+      +'</td></tr>';
+  }).join('') : '<tr><td colspan="5" class="empty">No records found</td></tr>';
 }
-function filterAttendance() {
-  var val=document.getElementById('attFilter').value;
-  renderAttTable(val?allAttendance.filter(function(r){return r.date&&r.date.startsWith(val);}):allAttendance);
+function filterAtt() {
+  var v = document.getElementById('attMon').value;
+  renderAtt(v ? allAtt.filter(function(r){ return r.date && r.date.startsWith(v); }) : allAtt);
 }
 
-// ── LEAVE ────────────────────────────────────────────────────
+// ── LEAVE ─────────────────────────────────────────────────────
 async function submitLeave() {
-  var date=document.getElementById('leaveDate').value, type=document.getElementById('leaveType').value, reason=document.getElementById('leaveReason').value;
-  if(!date){showToast('Please select a date','error');return;}
-  var r=await api({action:'requestLeave',employeeID:user.employeeID,name:user.name,team:user.team,date:date,type:type,reason:reason});
-  showToast(r.message,r.success?'success':'error');
-  if(r.success){ document.getElementById('leaveReason').value=''; showPage('myLeaves',document.getElementById('nav-myLeaves')); }
+  var date = document.getElementById('lvDate').value;
+  var type = document.getElementById('lvType').value;
+  var rsn  = document.getElementById('lvReason').value;
+  if (!date) { showToast('Please select a date','error'); return; }
+  var r = await call({action:'requestLeave', employeeID:user.id, name:user.name, team:user.team, date:date, type:type, reason:rsn});
+  showToast(r.message, r.success?'success':'error');
+  if (r.success) { document.getElementById('lvReason').value=''; showPage('myLeaves',document.getElementById('n-myLeaves')); }
 }
 
 async function loadMyLeaves() {
-  var r=await api({action:'getMyLeaves',employeeID:user.employeeID});
-  myLeaveRecords=(r.success&&r.records)?r.records:[];
-  var tbody=document.getElementById('myLeavesBody');
-  if(!myLeaveRecords.length){ tbody.innerHTML='<tr><td colspan="5" class="empty-state">No requests yet</td></tr>'; return; }
-  tbody.innerHTML=myLeaveRecords.map(function(x){
-    return '<tr><td>'+formatDate(x.date)+'</td><td>'+x.type+'</td>'
-      +'<td style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(x.reason||'—')+'</td>'
-      +'<td>'+formatDate(x.requestedOn)+'</td>'
-      +'<td><span class="badge badge-'+x.status.toLowerCase()+'" style="font-size:0.72rem"><span class="dot"></span>'+x.status+'</span></td></tr>';
-  }).join('');
+  var r  = await call({action:'getMyLeaves', employeeID:user.id});
+  var tb = document.getElementById('lvTbody');
+  myLeaves = (r && r.records) ? r.records : [];
+  tb.innerHTML = myLeaves.length ? myLeaves.map(function(x){
+    return '<tr><td>'+fmtDate(x.date)+'</td><td>'+x.type+'</td>'
+      +'<td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(x.reason||'—')+'</td>'
+      +'<td>'+fmtDate(x.requestedOn)+'</td>'
+      +'<td><span class="badge b-'+x.status.toLowerCase()+'"><span class="d"></span>'+x.status+'</span></td></tr>';
+  }).join('') : '<tr><td colspan="5" class="empty">No requests yet</td></tr>';
 }
 
 // ── CALENDAR ─────────────────────────────────────────────────
-function buildCalDayNames() {
-  var c=document.getElementById('calDayNames');
-  c.innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(d){return '<div class="cal-day-name">'+d+'</div>';}).join('');
+function buildCalDays() {
+  var c = document.getElementById('calDayNames');
+  c.innerHTML = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(d){ return '<div class="cal-dn">'+d+'</div>'; }).join('');
 }
-
-function renderCalendar() {
-  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('calTitle').textContent = months[calMonth]+' '+calYear;
-
-  // Build event map from myLeaveRecords
-  var evMap={};
-  myLeaveRecords.forEach(function(l){
-    var key=String(l.date).split('T')[0];
-    if(!evMap[key]) evMap[key]=[];
-    evMap[key].push(l);
+function renderCal() {
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calTitle').textContent = months[calM] + ' ' + calY;
+  var evMap = {};
+  myLeaves.forEach(function(l){
+    var k = String(l.date).split('T')[0];
+    if (!evMap[k]) evMap[k] = [];
+    evMap[k].push(l);
   });
-
-  var first=new Date(calYear,calMonth,1), last=new Date(calYear,calMonth+1,0);
-  var today=new Date(); today.setHours(0,0,0,0);
-  var cells=[];
-  for(var i=0;i<first.getDay();i++) cells.push({date:new Date(calYear,calMonth,-first.getDay()+i+1),current:false});
-  for(var d=1;d<=last.getDate();d++) cells.push({date:new Date(calYear,calMonth,d),current:true});
-  var rem=7-(cells.length%7||7);
-  for(var j=1;j<=rem;j++) cells.push({date:new Date(calYear,calMonth+1,j),current:false});
-
-  var grid=document.getElementById('calGrid');
-  grid.innerHTML=cells.map(function(c){
-    var key=c.date.toISOString().split('T')[0];
-    var isToday=c.date.getTime()===today.getTime();
-    var evs=evMap[key]||[];
-    var hasApproved=evs.some(function(e){return e.status==='Approved';});
-    var hasPending=evs.some(function(e){return e.status==='Pending';});
-    var cls='cal-cell'+(isToday?' today':'')+(c.current?'':' other-month')+(hasApproved?' has-approved':hasPending?' has-pending':'');
-    var evHTML=evs.slice(0,2).map(function(e){
-      return '<div class="cal-event '+e.status.toLowerCase()+'">'+e.type.split(' ')[0]+'</div>';
+  var first = new Date(calY,calM,1), last = new Date(calY,calM+1,0);
+  var today = new Date(); today.setHours(0,0,0,0);
+  var cells = [];
+  for (var i=0;i<first.getDay();i++) cells.push({d:new Date(calY,calM,-first.getDay()+i+1),cur:false});
+  for (var d=1;d<=last.getDate();d++) cells.push({d:new Date(calY,calM,d),cur:true});
+  var rem = 7 - (cells.length%7||7);
+  for (var j=1;j<=rem;j++) cells.push({d:new Date(calY,calM+1,j),cur:false});
+  var g = document.getElementById('calGrid');
+  g.innerHTML = cells.map(function(c){
+    var k = fmtDateInput(c.d);
+    var isT = c.d.getTime()===today.getTime();
+    var evs = evMap[k]||[];
+    var hasA = evs.some(function(e){return e.status==='Approved';});
+    var hasP = evs.some(function(e){return e.status==='Pending';});
+    var cls  = 'cal-cell'+(isT?' today':'')+(c.cur?'':' om')+(hasA?' a-leave':hasP?' p-leave':'');
+    var evH  = evs.slice(0,2).map(function(e){
+      return '<div class="ce '+e.status.toLowerCase()+'">'+e.type.split(' ')[0]+'</div>';
     }).join('');
-    return '<div class="'+cls+'"><div class="cal-num">'+c.date.getDate()+'</div>'+evHTML+'</div>';
+    return '<div class="'+cls+'"><div class="cn">'+c.d.getDate()+'</div>'+evH+'</div>';
   }).join('');
 }
-
-function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
-function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+function calPrev(){ calM--; if(calM<0){calM=11;calY--;} renderCal(); }
+function calNext(){ calM++; if(calM>11){calM=0;calY++;} renderCal(); }
 
 // ── CHANGE PASSWORD ──────────────────────────────────────────
-async function submitChangePassword() {
-  var oldPwd=document.getElementById('oldPassword').value;
-  var newPwd=document.getElementById('newPassword').value;
-  var confPwd=document.getElementById('confirmNewPassword').value;
-  var errEl=document.getElementById('cpError');
-  errEl.style.display='none';
-  if(!oldPwd){errEl.textContent='Please enter your current password.';errEl.style.display='block';return;}
-  if(!newPwd){errEl.textContent='Please enter a new password.';errEl.style.display='block';return;}
-  if(newPwd.length<6){errEl.textContent='New password must be at least 6 characters.';errEl.style.display='block';return;}
-  if(newPwd!==confPwd){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
-  if(oldPwd===newPwd){errEl.textContent='New password must be different from current.';errEl.style.display='block';return;}
-  var r=await api({action:'changePassword',employeeID:user.employeeID,oldPassword:oldPwd,newPassword:newPwd});
-  if(r.success){
-    showToast('Password changed successfully! 🎉','success');
-    document.getElementById('oldPassword').value='';
-    document.getElementById('newPassword').value='';
-    document.getElementById('confirmNewPassword').value='';
-  } else { errEl.textContent=r.message||'Failed to change password.'; errEl.style.display='block'; }
+async function submitCP() {
+  var o = document.getElementById('cpOld').value;
+  var n = document.getElementById('cpNew').value;
+  var c = document.getElementById('cpConf').value;
+  var e = document.getElementById('cpErr');
+  e.style.display = 'none';
+  if (!o){e.textContent='Enter current password.';e.style.display='block';return;}
+  if (!n){e.textContent='Enter new password.';e.style.display='block';return;}
+  if (n.length<6){e.textContent='Minimum 6 characters.';e.style.display='block';return;}
+  if (n!==c){e.textContent='Passwords do not match.';e.style.display='block';return;}
+  if (o===n){e.textContent='New password must differ.';e.style.display='block';return;}
+  var r = await call({action:'changePassword', employeeID:user.id, oldPassword:o, newPassword:n});
+  if (r.success) {
+    showToast('Password changed! 🎉','success');
+    document.getElementById('cpOld').value = document.getElementById('cpNew').value = document.getElementById('cpConf').value = '';
+  } else { e.textContent=r.message||'Failed.'; e.style.display='block'; }
 }
 
-// ── NAVIGATION ───────────────────────────────────────────────
-function showPage(id,el) {
+// ── NAV ───────────────────────────────────────────────────────
+function showPage(id, el) {
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-  var pg=document.getElementById('page-'+id);
-  if(pg) pg.classList.add('active');
-  if(el) el.classList.add('active');
+  var pg = document.getElementById('page-'+id);
+  if (pg) pg.classList.add('active');
+  if (el) el.classList.add('active');
   closeSidebar();
-  if(id==='myLeaves') loadMyLeaves();
-  if(id==='attendance') renderAttTable(allAttendance);
-  if(id==='calendar'){ buildCalDayNames(); renderCalendar(); }
+  if (id==='myLeaves')     loadMyLeaves();
+  if (id==='attendance')   renderAtt(allAtt);
+  if (id==='calendar')     { buildCalDays(); renderCal(); }
 }
-function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
-function logout(){ localStorage.removeItem('af_user'); location.reload(); }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+function doLogout() { localStorage.removeItem('af_u'); location.reload(); }
 
-// ── API & HELPERS ────────────────────────────────────────────
-async function api(params) {
-  try { var r=await fetch(API_URL,{method:'POST',body:JSON.stringify(params)}); return await r.json(); }
-  catch(e){ return {success:false,message:'Network error: '+e.message}; }
+// ── HELPERS ──────────────────────────────────────────────────
+async function call(params) {
+  try {
+    var r = await fetch(API, {method:'POST', body:JSON.stringify(params)});
+    return await r.json();
+  } catch(e) { return {success:false, message:'Network error: '+e.message}; }
 }
-function formatDate(s){
-  if(!s) return '—';
-  try{ return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){return s;}
+function fmtDate(s) {
+  if (!s) return '—';
+  try { return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+  catch(e) { return s; }
 }
-function showToast(msg,type){
-  type=type||'success';
-  var t=document.getElementById('toast');
-  t.textContent=(type==='success'?'✅ ':'❌ ')+msg;
-  t.className='toast '+type+' show';
-  setTimeout(function(){t.classList.remove('show');},3500);
+function fmtDateInput(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = (type==='success'?'✅ ':'❌ ')+msg;
+  t.className = 'toast '+type+' show';
+  setTimeout(function(){t.classList.remove('show');}, 3500);
 }
 </script>
 </body>
