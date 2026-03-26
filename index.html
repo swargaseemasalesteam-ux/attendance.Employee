@@ -482,7 +482,8 @@ async function initApp() {
   document.getElementById('userAvatar').textContent = (user.name||'?')[0].toUpperCase();
   document.getElementById('greetName').textContent = (user.name||'').split(' ')[0] || '—';
   var t = new Date(); t.setDate(t.getDate()+1);
-  document.getElementById('leaveDate').value = t.toISOString().split('T')[0];
+  var ty = t.getFullYear(), tm = String(t.getMonth()+1).padStart(2,'0'), td = String(t.getDate()).padStart(2,'0');
+  document.getElementById('leaveDate').value = ty+'-'+tm+'-'+td;
   await loadDashboard();
 }
 
@@ -498,7 +499,7 @@ async function loadDashboard() {
 
   allAttendance   = (aR.success && aR.records)  ? aR.records  : [];
   myLeaveRecords  = (lR.success && lR.records)  ? lR.records  : [];
-  weekOffQuota    = (qR.success && qR.quota)    ? qR.quota    : 4;
+  weekOffQuota = (qR && qR.success && qR.quota !== undefined && qR.quota !== null) ? parseInt(qR.quota) || 4 : 4;
 
   // Clock
   updateClockUI(sR);
