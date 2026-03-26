@@ -489,30 +489,34 @@ async function initApp() {
 
 // ── DASHBOARD ────────────────────────────────────────────────
 async function loadDashboard() {
-  var results = await Promise.all([
-    api({action:'todayStatus', employeeID:user.employeeID}),
-    api({action:'getAttendance', employeeID:user.employeeID}),
-    api({action:'getMyLeaves',   employeeID:user.employeeID}),
-    api({action:'getWeekOffQuota'})
-  ]);
-  var sR=results[0], aR=results[1], lR=results[2], qR=results[3];
+  // Call each API separately so one failure doesn't break others
+  var sR = await api({action:'todayStatus',    employeeID:user.employeeID});
+  var aR = await api({action:'getAttendance',  employeeID:user.employeeID});
+  var lR = await api({action:'getMyLeaves',    employeeID:user.employeeID});
+  var qR = await api({action:'getWeekOffQuota', employeeID:user.employeeID});
 
-  allAttendance   = (aR.success && aR.records)  ? aR.records  : [];
-  myLeaveRecords  = (lR.success && lR.records)  ? lR.records  : [];
-  weekOffQuota = (qR && qR.success && qR.quota !== undefined && qR.quota !== null) ? parseInt(qR.quota) || 4 : 4;
+  allAttendance  = (aR && aR.success && aR.records)  ? aR.records  : [];
+  myLeaveRecords = (lR && lR.success && lR.records)  ? lR.records  : [];
 
-  // Clock
+  // Parse quota safely — default to 4
+  if (qR && qR.success) {
+    weekOffQuota = parseInt(qR.quota) || 4;
+  } else {
+    weekOffQuota = 4;
+  }
+
+  // Update clock UI
   updateClockUI(sR);
 
   // Stats — count this month's week-offs
   var now = new Date();
   var ym  = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-  var monthLeaves   = myLeaveRecords.filter(function(l){ return l.date && l.date.startsWith(ym); });
-  var weekOffsUsed  = monthLeaves.filter(function(l){ return l.type==='Weekly Off' && (l.status==='Approved'||l.status==='Pending'); }).length;
-  var weekOffsLeft  = Math.max(0, weekOffQuota - weekOffsUsed);
-  var pending       = myLeaveRecords.filter(function(l){ return l.status==='Pending'; }).length;
-  var approved      = myLeaveRecords.filter(function(l){ return l.status==='Approved'; }).length;
-  var denied        = myLeaveRecords.filter(function(l){ return l.status==='Rejected'; }).length;
+  var monthLeaves  = myLeaveRecords.filter(function(l){ return l.date && l.date.startsWith(ym); });
+  var weekOffsUsed = monthLeaves.filter(function(l){ return l.type==='Weekly Off' && (l.status==='Approved'||l.status==='Pending'); }).length;
+  var weekOffsLeft = Math.max(0, weekOffQuota - weekOffsUsed);
+  var pending      = myLeaveRecords.filter(function(l){ return l.status==='Pending'; }).length;
+  var approved     = myLeaveRecords.filter(function(l){ return l.status==='Approved'; }).length;
+  var denied       = myLeaveRecords.filter(function(l){ return l.status==='Rejected'; }).length;
 
   document.getElementById('statWeekOffsLeft').textContent = weekOffsLeft;
   document.getElementById('statWeekOffSub').textContent   = 'of ' + weekOffQuota + ' total';
@@ -521,7 +525,7 @@ async function loadDashboard() {
   document.getElementById('statDenied').textContent       = denied;
 
   // Recent requests table
-  var tbody = document.getElementById('recentRequestsBody');
+  var tbody  = document.getElementById('recentRequestsBody');
   var recent = myLeaveRecords.slice(0, 8);
   tbody.innerHTML = recent.length ? recent.map(function(r){
     return '<tr><td>'+formatDate(r.date)+'</td><td>'+r.type+'</td>'
