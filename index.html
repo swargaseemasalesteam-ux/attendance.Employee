@@ -500,11 +500,18 @@ async function startApp() {
 
 // ── DASHBOARD ─────────────────────────────────────────────────
 async function loadDashboard() {
-  // Call APIs one by one — simpler, more reliable
-  var sR = await call({action:'todayStatus',   employeeID:user.id});
-  var aR = await call({action:'getAttendance', employeeID:user.id});
-  var lR = await call({action:'getMyLeaves',   employeeID:user.id});
-  var qR = await call({action:'getWeekOffQuota'});
+  // Run all 4 API calls in PARALLEL for speed
+  var results = await Promise.allSettled([
+    call({action:'todayStatus',   employeeID:user.id}),
+    call({action:'getAttendance', employeeID:user.id}),
+    call({action:'getMyLeaves',   employeeID:user.id}),
+    call({action:'getWeekOffQuota'})
+  ]);
+
+  var sR = results[0].status==='fulfilled' ? results[0].value : {};
+  var aR = results[1].status==='fulfilled' ? results[1].value : {};
+  var lR = results[2].status==='fulfilled' ? results[2].value : {};
+  var qR = results[3].status==='fulfilled' ? results[3].value : {};
 
   // Attendance records
   allAtt   = (aR && aR.records)  ? aR.records  : [];
@@ -671,31 +678,47 @@ function buildCalDays() {
 function renderCal() {
   var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('calTitle').textContent = months[calM] + ' ' + calY;
+
+  // Build event map using plain string keys — no Date() conversion
   var evMap = {};
   myLeaves.forEach(function(l){
-    var k = String(l.date).split('T')[0];
+    var k = String(l.date).split('T')[0]; // already yyyy-MM-dd
     if (!evMap[k]) evMap[k] = [];
     evMap[k].push(l);
   });
-  var first = new Date(calY,calM,1), last = new Date(calY,calM+1,0);
-  var today = new Date(); today.setHours(0,0,0,0);
+
+  var first = new Date(calY, calM, 1);
+  var last  = new Date(calY, calM+1, 0);
+  // Today as string — no timezone issue
+  var now   = new Date();
+  var todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+
   var cells = [];
-  for (var i=0;i<first.getDay();i++) cells.push({d:new Date(calY,calM,-first.getDay()+i+1),cur:false});
-  for (var d=1;d<=last.getDate();d++) cells.push({d:new Date(calY,calM,d),cur:true});
+  for (var i=0; i<first.getDay(); i++) {
+    var d = new Date(calY, calM, 1-first.getDay()+i);
+    cells.push({str: fmtDateInput(d), num: d.getDate(), cur: false});
+  }
+  for (var d2=1; d2<=last.getDate(); d2++) {
+    var dd = new Date(calY, calM, d2);
+    cells.push({str: fmtDateInput(dd), num: d2, cur: true});
+  }
   var rem = 7 - (cells.length%7||7);
-  for (var j=1;j<=rem;j++) cells.push({d:new Date(calY,calM+1,j),cur:false});
+  for (var j=1; j<=rem; j++) {
+    var dj = new Date(calY, calM+1, j);
+    cells.push({str: fmtDateInput(dj), num: j, cur: false});
+  }
+
   var g = document.getElementById('calGrid');
   g.innerHTML = cells.map(function(c){
-    var k = fmtDateInput(c.d);
-    var isT = c.d.getTime()===today.getTime();
-    var evs = evMap[k]||[];
+    var isT = c.str === todayStr;
+    var evs = evMap[c.str] || [];
     var hasA = evs.some(function(e){return e.status==='Approved';});
     var hasP = evs.some(function(e){return e.status==='Pending';});
-    var cls  = 'cal-cell'+(isT?' today':'')+(c.cur?'':' om')+(hasA?' a-leave':hasP?' p-leave':'');
+    var cls  = 'cal-cell' + (isT?' today':'') + (c.cur?'':' om') + (hasA?' a-leave': hasP?' p-leave':'');
     var evH  = evs.slice(0,2).map(function(e){
       return '<div class="ce '+e.status.toLowerCase()+'">'+e.type.split(' ')[0]+'</div>';
     }).join('');
-    return '<div class="'+cls+'"><div class="cn">'+c.d.getDate()+'</div>'+evH+'</div>';
+    return '<div class="'+cls+'"><div class="cn">'+c.num+'</div>'+evH+'</div>';
   }).join('');
 }
 function calPrev(){ calM--; if(calM<0){calM=11;calY--;} renderCal(); }
@@ -751,8 +774,15 @@ async function call(params) {
 }
 function fmtDate(s) {
   if (!s) return '—';
-  try { return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
-  catch(e) { return s; }
+  // Parse yyyy-MM-dd directly to avoid timezone shift
+  try {
+    var parts = String(s).split('T')[0].split('-');
+    if (parts.length === 3) {
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return parts[2] + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+    }
+    return s;
+  } catch(e) { return s; }
 }
 function fmtDateInput(d) {
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
