@@ -14,7 +14,7 @@
   --warning:#B8860B;--warning-bg:#FDF6E3;
   --danger:#C0392B;--danger-bg:#FDECEA;
   --text:#1A1208;--text2:#3D2B1A;--muted:#7A6A5A;
-  --sidebar-w:230px;--topbar-h:56px;--bnav-h:62px;
+  --sidebar-w:230px;--topbar-h:56px;
   --radius:12px;--shadow:0 2px 12px rgba(122,21,24,0.07);--shadow-md:0 4px 20px rgba(122,21,24,0.12);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -189,13 +189,6 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 .cldot{width:9px;height:9px;border-radius:3px;}
 
 /* BOTTOM NAV */
-.bnav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bnav-h);background:var(--surface);border-top:2px solid var(--border);z-index:100;box-shadow:0 -2px 12px rgba(122,21,24,0.08);}
-.bnavinner{display:flex;height:100%;}
-.bni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--muted);font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;border:none;background:none;padding:6px 0;transition:color 0.15s;}
-.bni.active{color:var(--maroon);}
-.bni svg{width:22px;height:22px;}
-.bni .bndot{width:4px;height:4px;border-radius:50%;background:var(--maroon);margin-top:1px;display:none;}
-.bni.active .bndot{display:block;}
 
 /* OVERLAY + TOAST */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:89;display:none;}
@@ -204,15 +197,16 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 .toast.show{transform:none;opacity:1;}
 .toast.success{border-left:3px solid var(--success);}
 .toast.error{border-left:3px solid var(--danger);}
+.hamburger{display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:7px;padding:6px 8px;cursor:pointer;margin-right:6px;}
 
 /* RESPONSIVE */
 @media(max-width:1024px){:root{--sidebar-w:200px;}.sgrid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);}
   .sidebar.open{transform:none;box-shadow:4px 0 20px rgba(0,0,0,0.15);}
-  .main{margin-left:0;padding-bottom:var(--bnav-h);}
+  .main{margin-left:0;}
   .inner{padding:14px 12px 20px;}
-  .bnav{display:flex;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
   .tteam{display:none;}
   .sgrid{grid-template-columns:repeat(2,1fr);gap:10px;}
   .cbody{flex-direction:column;align-items:flex-start;}
@@ -221,7 +215,7 @@ tr:hover td{background:rgba(122,21,24,0.02);}
   .bci,.bco{flex:1;justify-content:center;}
   .fcard{max-width:100%;}
   .ptitle{font-size:1.3rem;}
-  .toast{bottom:calc(var(--bnav-h) + 8px);}
+  .toast{bottom:16px;}
 }
 @media(max-width:380px){.sgrid{grid-template-columns:repeat(2,1fr);}.sval{font-size:1.5rem;}}
 </style>
@@ -248,6 +242,9 @@ tr:hover td{background:rgba(122,21,24,0.02);}
 <div id="app">
   <!-- TOPBAR -->
   <div class="topbar">
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+      <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
     <div class="tlogo"><h2>AttendFlow</h2><span class="chip">EMPLOYEE</span></div>
     <div class="tright">
       <div class="tavatar" id="tAv">?</div>
@@ -434,31 +431,6 @@ tr:hover td{background:rgba(122,21,24,0.02);}
     </div>
   </div>
 
-  <!-- BOTTOM NAV (mobile) -->
-  <div class="bnav">
-    <div class="bnavinner">
-      <button class="bni active" id="bn-dashboard" onclick="showPage('dashboard',document.getElementById('n-dashboard'));setBN('dashboard')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Home<div class="bndot"></div>
-      </button>
-      <button class="bni" id="bn-attendance" onclick="showPage('attendance',document.getElementById('n-attendance'));setBN('attendance')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
-        Attend<div class="bndot"></div>
-      </button>
-      <button class="bni" id="bn-leaves" onclick="showPage('leaves',document.getElementById('n-leaves'));setBN('leaves')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        Leave<div class="bndot"></div>
-      </button>
-      <button class="bni" id="bn-calendar" onclick="showPage('calendar',document.getElementById('n-calendar'));setBN('calendar')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="8" cy="16" r="1" fill="currentColor"/></svg>
-        Calendar<div class="bndot"></div>
-      </button>
-      <button class="bni" id="bn-myLeaves" onclick="showPage('myLeaves',document.getElementById('n-myLeaves'));setBN('myLeaves')">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        My Leaves<div class="bndot"></div>
-      </button>
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -734,7 +706,7 @@ async function submitLeave(){
   else showToast(ok+' submitted, '+fail+' failed.','error');
   selectedDates=[];renderMcCal();renderSelTags();
   document.getElementById('lvReason').value='';
-  showPage('myLeaves',document.getElementById('n-myLeaves'));setBN('myLeaves');
+  showPage('myLeaves',document.getElementById('n-myLeaves'));
 }
 
 // ── MY LEAVES ─────────────────────────────────────────────────
@@ -819,11 +791,7 @@ function showPage(id,el){
   if(id==='attendance')renderAtt(allAtt);
   if(id==='calendar'){buildCalDayNames();renderCal();}
 }
-function setBN(id){
-  document.querySelectorAll('.bni').forEach(function(b){b.classList.remove('active');});
-  var bn=document.getElementById('bn-'+id);
-  if(bn)bn.classList.add('active');
-}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 function doLogout(){localStorage.removeItem('af_u');location.reload();}
 
